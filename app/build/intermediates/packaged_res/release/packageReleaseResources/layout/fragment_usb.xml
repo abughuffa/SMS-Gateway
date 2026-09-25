@@ -12,26 +12,27 @@
         <RadioGroup
             android:id="@+id/rgUsbMode"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RadioButton
                 android:id="@+id/rbAdb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ADB port-forward (dev/test)" />
+                android:text="@string/rb_adb" />
 
             <RadioButton
                 android:id="@+id/rbAccessory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="USB Accessory Mode" />
+                android:text="@string/rb_accessory" />
         </RadioGroup>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="Tunnel port (default 8081)">
+            android:hint="@string/hint_usb_port">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etUsbPort"
@@ -45,20 +46,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Status: Disconnected"
+            android:text="@string/status_disconnected"
             android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="ADB mode tip:\nOn the PC run:\n  adb forward tcp:8081 tcp:8080\nThen use http://localhost:8081/" />
 
         <Button
             android:id="@+id/btnUsbTest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Test USB Connection" />
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_usb_test" />
     </LinearLayout>
 </ScrollView>

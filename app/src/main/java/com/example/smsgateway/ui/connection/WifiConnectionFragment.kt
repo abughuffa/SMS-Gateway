@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.Inet4Address
 import java.net.NetworkInterface
+import java.util.Locale
 
 class WifiConnectionFragment : Fragment() {
 
@@ -31,7 +35,7 @@ class WifiConnectionFragment : Fragment() {
         val tvStatus = v.findViewById<TextView>(R.id.tvWifiStatus)
         val tvIps = v.findViewById<TextView>(R.id.tvIpList)
 
-        etPort.setText(cfg.wifiPort.toString())
+        etPort.setText(String.format(Locale.US, "%d", cfg.wifiPort))
         etToken.setText(cfg.wifiToken ?: "")
         cbAll.isChecked = cfg.wifiBindAll
 
@@ -54,26 +58,19 @@ class WifiConnectionFragment : Fragment() {
 
         fun refreshIps() {
             viewLifecycleOwner.lifecycleScope.launch {
-
                 val ips = withContext(Dispatchers.IO) { localIpv4Addresses() }
                 val body = if (ips.isEmpty()) getString(R.string.local_ips_none)
                 else ips.joinToString("\n")
-                tvIps.text = getString(R.string.local_ips_header) + "\n" + body
-
-//                val ips = withContext(Dispatchers.IO) { localIpv4Addresses() }
-//                tvIps.text = "Local IPs:\n" +
-//                    (if (ips.isEmpty()) "(none)" else ips.joinToString("\n"))
+                tvIps.text = getString(R.string.local_ips_block, body)
             }
         }
         refreshIps()
         v.findViewById<Button>(R.id.btnWifiRefreshIp)
             .setOnClickListener { refreshIps() }
 
-        //vm.update { it.copy(mode = ConnectionMode.WIFI) }
         viewLifecycleOwner.lifecycleScope.launch {
             vm.wifiStatus.collect {
                 tvStatus.text = getString(R.string.status_format, it)
-                //tvStatus.text = "Status: $it"
             }
         }
     }

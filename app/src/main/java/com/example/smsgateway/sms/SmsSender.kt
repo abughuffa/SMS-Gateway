@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
@@ -24,7 +25,10 @@ object SmsSender {
         simSlot: Int = 0
     ): SendResult {
         return try {
-            val sms = smsManagerForSlot(context, simSlot) ?: SmsManager.getDefault()
+            val sms = smsManagerForSlot(context, simSlot)
+                ?: defaultSmsManager(context)
+                ?: return SendResult(false, "SMS manager unavailable")
+
             val parts = sms.divideMessage(message)
 
             val sentIntents = ArrayList<PendingIntent>(parts.size)
@@ -51,6 +55,7 @@ object SmsSender {
         }
     }
 
+    /** Returns a per-SIM SmsManager on API 31+; falls back to the deprecated helper below 31. */
     private fun smsManagerForSlot(context: Context, slot: Int): SmsManager? {
         return try {
             if (ContextCompat.checkSelfPermission(
@@ -71,9 +76,30 @@ object SmsSender {
                 ?: subMgr.activeSubscriptionInfoList?.firstOrNull()
                 ?: return null
 
-            SmsManager.getSmsManagerForSubscriptionId(sub.subscriptionId)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                context.getSystemService(SmsManager::class.java)
+                    ?.createForSubscriptionId(sub.subscriptionId)
+            } else {
+                @Suppress("DEPRECATION")
+                SmsManager.getSmsManagerForSubscriptionId(sub.subscriptionId)
+            }
         } catch (t: Throwable) {
             Log.e(TAG, "smsManagerForSlot() failed", t)
+            null
+        }
+    }
+
+    /** Default SmsManager; uses the API 31+ system service when available. */
+    private fun defaultSmsManager(context: Context): SmsManager? {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                context.getSystemService(SmsManager::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                SmsManager.getDefault()
+            }
+        } catch (t: Throwable) {
+            Log.e(TAG, "defaultSmsManager() failed", t)
             null
         }
     }

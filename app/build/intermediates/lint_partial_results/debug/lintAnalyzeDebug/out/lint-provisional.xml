@@ -8,12 +8,12 @@
         <fix-data missing="android.permission.POST_NOTIFICATIONS"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/service/GatewayService.kt"
-            line="91"
+            line="98"
             column="9"
-            startOffset="3280"
-            endLine="92"
+            startOffset="3452"
+            endLine="99"
             endColumn="48"
-            endOffset="3399"/>
+            endOffset="3571"/>
     </incident>
 
 </incidents>

@@ -1,14 +1,18 @@
 package com.example.smsgateway.service
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.IBinder
 import android.provider.Telephony
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.example.smsgateway.MainActivity
 import com.example.smsgateway.R
 import com.example.smsgateway.sms.SmsReceiver
 import com.example.smsgateway.ui.connection.ConnectionMode
@@ -29,7 +33,7 @@ class GatewayService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(1, buildNotification("Starting…"))
+        startForeground(1, buildNotification(getString(R.string.service_starting)))
 
         val cfg = ConnectionPrefs.load(this)
         when (cfg.mode) {
@@ -37,11 +41,6 @@ class GatewayService : Service() {
                 WifiServer.configure(this, cfg.wifiToken) { updateNotification(it) }
                 WifiServer.start(cfg.wifiPort, cfg.wifiBindAll)
                 updateNotification(WifiServer.status())
-            }
-            ConnectionMode.BLUETOOTH -> {
-                BluetoothServer.configure(this) { updateNotification(it) }
-                BluetoothServer.start(cfg.btServiceName, cfg.btUuid)
-                updateNotification(BluetoothServer.status())
             }
             ConnectionMode.USB -> {
                 UsbServer.configure(this) { updateNotification("USB: $it") }
@@ -53,14 +52,13 @@ class GatewayService : Service() {
                 )
                 updateNotification(UsbServer.status())
             }
-            ConnectionMode.NONE -> updateNotification("No mode selected")
+            ConnectionMode.NONE -> updateNotification(getString(R.string.service_no_mode))
         }
         return START_STICKY
     }
 
     override fun onDestroy() {
         try { WifiServer.stop() } catch (_: Throwable) {}
-        try { BluetoothServer.stop() } catch (_: Throwable) {}
         try { UsbServer.stop() } catch (_: Throwable) {}
         try { unregisterReceiver(smsReceiver) } catch (_: Throwable) {}
         super.onDestroy()
@@ -70,19 +68,28 @@ class GatewayService : Service() {
 
     private fun buildNotification(text: String): Notification {
         val chanId = "gateway"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                .createNotificationChannel(
-                    NotificationChannel(
-                        chanId, "SMS Gateway",
-                        NotificationManager.IMPORTANCE_LOW
-                    )
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .createNotificationChannel(
+                NotificationChannel(
+                    chanId,
+                    getString(R.string.notif_channel_name),
+                    NotificationManager.IMPORTANCE_LOW
                 )
-        }
+            )
+
+        val tapIntent = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         return NotificationCompat.Builder(this, chanId)
-            .setContentTitle("SMS Gateway")
+            .setContentTitle(getString(R.string.app_name))
             .setContentText(text)
             .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(tapIntent)
             .setOngoing(true)
             .build()
     }

@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.smsgateway.R
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 class UsbConnectionFragment : Fragment() {
 
@@ -25,7 +30,7 @@ class UsbConnectionFragment : Fragment() {
         val tvStatus = v.findViewById<TextView>(R.id.tvUsbStatus)
 
         val cfg = vm.config.value
-        etPort.setText(cfg.usbPort.toString())
+        etPort.setText(String.format(Locale.US, "%d", cfg.usbPort))
         when (cfg.usbMode) {
             UsbMode.ADB_FORWARD -> rg.check(R.id.rbAdb)
             UsbMode.ACCESSORY -> rg.check(R.id.rbAccessory)
@@ -48,16 +53,16 @@ class UsbConnectionFragment : Fragment() {
 
         v.findViewById<Button>(R.id.btnUsbTest).setOnClickListener {
             tvStatus.text = getString(R.string.status_format, vm.usbStatus.value)
-            //tvStatus.text = "Status: ${vm.usbStatus.value}"
-            Toast.makeText(requireContext(), "USB test triggered", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                R.string.usb_test_triggered,
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        //vm.update { it.copy(mode = ConnectionMode.USB) }
         viewLifecycleOwner.lifecycleScope.launch {
-
             vm.usbStatus.collect {
                 tvStatus.text = getString(R.string.status_format, it)
-              //  tvStatus.text = "Status: $it"
             }
         }
     }

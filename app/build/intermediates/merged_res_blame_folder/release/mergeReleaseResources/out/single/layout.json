@@ -4,10 +4,6 @@
         "source": "com.example.smsgateway.app-main-38:/layout/fragment_wifi.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-mergeReleaseResources-36:/layout/fragment_bluetooth.xml",
-        "source": "com.example.smsgateway.app-main-38:/layout/fragment_bluetooth.xml"
-    },
-    {
         "merged": "com.example.smsgateway.app-mergeReleaseResources-36:/layout/fragment_usb.xml",
         "source": "com.example.smsgateway.app-main-38:/layout/fragment_usb.xml"
     },

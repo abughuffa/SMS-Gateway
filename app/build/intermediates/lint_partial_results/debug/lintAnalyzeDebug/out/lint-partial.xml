@@ -11,18 +11,6 @@
                     name="com.example.smsgateway.USB_PERMISSION (used to send a broadcast)"
                     boolean="true"/>
             </map>
-            <map id="actionsSent">
-                    <map id="android.bluetooth.adapter.action.REQUEST_DISCOVERABLE (used to start an activity)">
-                        <location id="0"
-                            file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/ui/connection/BluetoothConnectionFragment.kt"
-                            line="63"
-                            column="26"
-                            startOffset="2408"
-                            endLine="63"
-                            endColumn="78"
-                            endOffset="2460"/>
-                    </map>
-            </map>
     </map>
     <map id="UnsafeIntentLaunch">
             <map id="unprotected">
@@ -32,17 +20,9 @@
             </map>
     </map>
     <map id="UnusedResources">
-        <location id="R.string.app_name"
-            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/values/strings.xml"
-            line="2"
-            column="13"
-            startOffset="24"
-            endLine="2"
-            endColumn="28"
-            endOffset="39"/>
         <entry
             name="model"
-            string="color[ic_launcher_background(U)],drawable[ic_launcher_foreground(U),ic_launcher_foreground_1(R)],id[tilConnectionType(U),actConnectionType(U),fragmentContainer(U),btnSave(U),btnCancel(U),tvState(U),btnStart(U),btnStop(U),btnConnection(U),etBtName(U),etBtUuid(U),cbDiscoverable(U),tvBtStatus(U),btnBtDiscover(U),btnBtPaired(U),lvPaired(U),rgUsbMode(U),rbAdb(U),rbAccessory(U),etUsbPort(U),tvUsbStatus(U),btnUsbTest(U),etWifiPort(U),etWifiToken(U),cbBindAll(U),tvWifiStatus(U),tvIpList(U),btnWifiRefreshIp(U)],layout[activity_connection(U),activity_main(U),fragment_bluetooth(U),fragment_usb(U),fragment_wifi(U)],mipmap[ic_launcher(U),ic_launcher_round(U)],string[app_name(D)],style[Theme_Material3_DayNight(U),Widget_Material3_TextInputLayout_OutlinedBox_ExposedDropdownMenu(R),Theme_Material3_DayNight_NoActionBar(R)],xml[accessory_filter(U)];1^2,1f^28,24^0^1,25^0^1,27^29;;;"/>
+            string="color[ic_launcher_background(U)],drawable[ic_launcher_foreground(U),ic_launcher_foreground_1(R)],id[root(U),tilConnectionType(D),actConnectionType(U),fragmentContainer(U),btnCancel(U),btnSave(U),tvState(U),btnStart(U),btnStop(U),btnConnection(U),rgUsbMode(U),rbAdb(U),rbAccessory(U),etUsbPort(U),tvUsbStatus(U),btnUsbTest(U),etWifiPort(U),etWifiToken(U),cbBindAll(U),tvWifiStatus(U),tvIpList(U),btnWifiRefreshIp(U)],layout[activity_connection(U),activity_main(U),fragment_usb(U),fragment_wifi(U)],mipmap[ic_launcher(U),ic_launcher_round(U)],string[app_name(U),connection_type(U),cancel(U),save_and_apply(U),main_title(U),service_stopped(U),action_start(U),action_stop(U),action_connection_settings(U),rb_adb(U),rb_accessory(U),hint_usb_port(U),status_disconnected(U),btn_usb_test(U),hint_http_port(U),hint_api_key(U),label_bind_all(U),status_stopped(U),label_ip_list(U),btn_refresh_ips(U),api_example(U),service_starting(U),service_no_mode(U),notif_channel_name(U),status_format(U),local_ips_block(U),local_ips_none(U),usb_test_triggered(U)],style[Theme_Material3_DayNight(U),Widget_Material3_TextInputLayout_OutlinedBox_ExposedDropdownMenu(R),Theme_Material3_DayNight_NoActionBar(R)],xml[accessory_filter(U)];1^2,19^20^3c^21^22,1a^23^24^25^26^27,1b^28^29^2a^2b^2c,1c^2d^2e^2f^30^31^32^33,1d^0^1,1e^0^1,3b^3d;;;"/>
     </map>
 
 </incidents>

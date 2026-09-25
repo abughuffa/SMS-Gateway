@@ -30,14 +30,19 @@ public final class ActivityMainBinding implements ViewBinding {
   public final Button btnStop;
 
   @NonNull
+  public final LinearLayout root;
+
+  @NonNull
   public final TextView tvState;
 
   private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button btnConnection,
-      @NonNull Button btnStart, @NonNull Button btnStop, @NonNull TextView tvState) {
+      @NonNull Button btnStart, @NonNull Button btnStop, @NonNull LinearLayout root,
+      @NonNull TextView tvState) {
     this.rootView = rootView;
     this.btnConnection = btnConnection;
     this.btnStart = btnStart;
     this.btnStop = btnStop;
+    this.root = root;
     this.tvState = tvState;
   }
 
@@ -86,6 +91,8 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      LinearLayout root = (LinearLayout) rootView;
+
       id = R.id.tvState;
       TextView tvState = ViewBindings.findChildViewById(rootView, id);
       if (tvState == null) {
@@ -93,7 +100,7 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((LinearLayout) rootView, btnConnection, btnStart, btnStop,
-          tvState);
+          root, tvState);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

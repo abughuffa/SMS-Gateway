@@ -4,17 +4,7 @@
             "outputFile": "com.example.smsgateway.app-mergeDebugResources-35:/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "/home/mohammed/.gradle/caches/9.6.0/transforms/7dc1e9441aa6d7480cf79676064ef726/transformed/appcompat-1.7.0/res/values-v24/values-v24.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,212",
-                        "endColumns": "156,134",
-                        "endOffsets": "207,342"
-                    }
-                },
-                {
-                    "source": "/home/mohammed/.gradle/caches/9.6.0/transforms/d4d87f2e5d75585c43d5bcdb0fc53e8f/transformed/material-1.12.0/res/values-v24/values-v24.xml",
+                    "source": "/home/mohammed/.gradle/caches/9.8.0/transforms/db3b64f3d7736704eafa04e58fb07844/transformed/material-1.12.0/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,9,12,15",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -30,6 +20,16 @@
                         "endLines": "4,5,6,7,10,13,16,19",
                         "endColumns": "84,98,86,100,10,10,10,10",
                         "endOffsets": "427,526,613,714,913,1126,1327,1542"
+                    }
+                },
+                {
+                    "source": "/home/mohammed/.gradle/caches/9.8.0/transforms/5d96abb767bb3da4e16cfbbe89e5cb09/transformed/appcompat-1.7.0/res/values-v24/values-v24.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,212",
+                        "endColumns": "156,134",
+                        "endOffsets": "207,342"
                     }
                 }
             ]

@@ -12,7 +12,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="HTTP port (default 8080)">
+            android:hint="@string/hint_http_port">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etWifiPort"
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:hint="API key (X-Api-Key header, optional)">
+            android:hint="@string/hint_api_key">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etWifiToken"
@@ -38,14 +38,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Bind to all interfaces (0.0.0.0)" />
+            android:text="@string/label_bind_all" />
 
         <TextView
             android:id="@+id/tvWifiStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Status: Stopped"
+            android:text="@string/status_stopped"
             android:textStyle="bold" />
 
         <TextView
@@ -53,19 +53,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Local IPs:" />
+            android:text="@string/label_ip_list" />
 
         <Button
             android:id="@+id/btnWifiRefreshIp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Refresh IP Addresses" />
+            android:text="@string/btn_refresh_ips" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="API example:\nPOST http://&lt;phone-ip&gt;:8080/send\n{&quot;to&quot;:&quot;+123&quot;,&quot;body&quot;:&quot;hi&quot;}" />
+            android:text="@string/api_example" />
     </LinearLayout>
 </ScrollView>

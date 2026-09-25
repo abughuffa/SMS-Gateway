@@ -35,17 +35,21 @@ public final class ActivityConnectionBinding implements ViewBinding {
   public final FrameLayout fragmentContainer;
 
   @NonNull
+  public final LinearLayout root;
+
+  @NonNull
   public final TextInputLayout tilConnectionType;
 
   private ActivityConnectionBinding(@NonNull LinearLayout rootView,
       @NonNull MaterialAutoCompleteTextView actConnectionType, @NonNull Button btnCancel,
-      @NonNull Button btnSave, @NonNull FrameLayout fragmentContainer,
+      @NonNull Button btnSave, @NonNull FrameLayout fragmentContainer, @NonNull LinearLayout root,
       @NonNull TextInputLayout tilConnectionType) {
     this.rootView = rootView;
     this.actConnectionType = actConnectionType;
     this.btnCancel = btnCancel;
     this.btnSave = btnSave;
     this.fragmentContainer = fragmentContainer;
+    this.root = root;
     this.tilConnectionType = tilConnectionType;
   }
 
@@ -100,6 +104,8 @@ public final class ActivityConnectionBinding implements ViewBinding {
         break missingId;
       }
 
+      LinearLayout root = (LinearLayout) rootView;
+
       id = R.id.tilConnectionType;
       TextInputLayout tilConnectionType = ViewBindings.findChildViewById(rootView, id);
       if (tilConnectionType == null) {
@@ -107,7 +113,7 @@ public final class ActivityConnectionBinding implements ViewBinding {
       }
 
       return new ActivityConnectionBinding((LinearLayout) rootView, actConnectionType, btnCancel,
-          btnSave, fragmentContainer, tilConnectionType);
+          btnSave, fragmentContainer, root, tilConnectionType);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

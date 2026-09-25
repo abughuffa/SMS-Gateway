@@ -4,7 +4,7 @@
             "outputFile": "com.example.smsgateway.app-mergeReleaseResources-35:/values-h480dp-land-v13/values-h480dp-land-v13.xml",
             "map": [
                 {
-                    "source": "/home/mohammed/.gradle/caches/9.6.0/transforms/d4d87f2e5d75585c43d5bcdb0fc53e8f/transformed/material-1.12.0/res/values-h480dp-land-v13/values-h480dp-land-v13.xml",
+                    "source": "/home/mohammed/.gradle/caches/9.8.0/transforms/db3b64f3d7736704eafa04e58fb07844/transformed/material-1.12.0/res/values-h480dp-land-v13/values-h480dp-land-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",

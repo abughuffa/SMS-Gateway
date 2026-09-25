@@ -5,11 +5,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.example.smsgateway.service.GatewayService
 import com.example.smsgateway.ui.connection.ConnectionActivity
 
@@ -20,9 +25,24 @@ class MainActivity : AppCompatActivity() {
     ) { /* results ignored — user can retry */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val root = findViewById<View>(R.id.root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
 
         val tvState = findViewById<TextView>(R.id.tvState)
 
@@ -32,12 +52,12 @@ class MainActivity : AppCompatActivity() {
                 this,
                 Intent(this, GatewayService::class.java)
             )
-            tvState.text = "Service: STARTING"
+            tvState.text = getString(R.string.service_starting)
         }
 
         findViewById<Button>(R.id.btnStop).setOnClickListener {
             stopService(Intent(this, GatewayService::class.java))
-            tvState.text = "Service: STOPPED"
+            tvState.text = getString(R.string.service_stopped)
         }
 
         findViewById<Button>(R.id.btnConnection).setOnClickListener {

@@ -1,6 +1,5 @@
 package com.example.smsgateway.service
 
-import kotlinx.coroutines.currentCoroutineContext
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -21,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.serialization.builtins.ListSerializer
@@ -130,8 +130,8 @@ object UsbServer {
         if (!usbManager.hasPermission(accessory)) {
             setStatus("Requesting USB permission…")
             val flags = PendingIntent.FLAG_UPDATE_CURRENT or
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    PendingIntent.FLAG_MUTABLE else 0
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                        PendingIntent.FLAG_MUTABLE else 0
             val pi = PendingIntent.getBroadcast(
                 ctx, 0,
                 Intent(ACTION_USB_PERMISSION).setPackage(ctx.packageName),
@@ -175,8 +175,7 @@ object UsbServer {
         val writer = BufferedWriter(OutputStreamWriter(fileOut))
 
         try {
-           // while (running && isActive) {
-                while (running && currentCoroutineContext().isActive) {
+            while (running && currentCoroutineContext().isActive) {
                 val line = reader.readLine() ?: break
                 if (line.isBlank()) continue
                 val response = processCommand(line)

@@ -14,9 +14,6 @@ class ConnectionViewModel(app: Application) : AndroidViewModel(app) {
     private val _wifiStatus = MutableStateFlow("Stopped")
     val wifiStatus: StateFlow<String> = _wifiStatus.asStateFlow()
 
-    private val _btStatus = MutableStateFlow("Stopped")
-    val btStatus: StateFlow<String> = _btStatus.asStateFlow()
-
     private val _usbStatus = MutableStateFlow("Disconnected")
     val usbStatus: StateFlow<String> = _usbStatus.asStateFlow()
 
@@ -27,6 +24,5 @@ class ConnectionViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setWifiStatus(s: String) { _wifiStatus.value = s }
-    fun setBtStatus(s: String) { _btStatus.value = s }
     fun setUsbStatus(s: String) { _usbStatus.value = s }
 }

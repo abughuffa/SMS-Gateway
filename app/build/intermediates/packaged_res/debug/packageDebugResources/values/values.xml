@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#1976D2</color>
+    <string name="action_connection_settings">Connection Settings</string>
+    <string name="action_start">Start</string>
+    <string name="action_stop">Stop</string>
+    <string name="api_example">API example:\nPOST http://&lt;phone-ip>:8080/send\n{"to":"+123","body":"hi"}</string>
     <string name="app_name">SMS Gateway</string>
+    <string name="btn_refresh_ips">Refresh IP Addresses</string>
+    <string name="btn_usb_test">Test USB</string>
+    <string name="cancel">Cancel</string>
+    <string name="connection_type">Connection type</string>
+    <string name="hint_api_key">API key (X-Api-Key header, optional)</string>
+    <string name="hint_http_port">HTTP port (default 8080)</string>
+    <string name="hint_usb_port">USB port</string>
+    <string name="label_bind_all">Bind to all interfaces (0.0.0.0)</string>
+    <string name="label_ip_list">Local IPs:</string>
+    <string name="local_ips_block">Local IPs:\n%1$s</string>
+    <string name="local_ips_none">(none)</string>
+    <string name="main_title">SMS Gateway</string>
+    <string name="notif_channel_name">SMS Gateway</string>
+    <string name="rb_accessory">Accessory</string>
+    <string name="rb_adb">ADB forward</string>
+    <string name="save_and_apply">Save &amp; Apply</string>
+    <string name="service_no_mode">No mode selected</string>
+    <string name="service_starting">Service: STARTING</string>
+    <string name="service_stopped">Service: STOPPED</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_format">Status: %1$s</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="usb_test_triggered">USB test triggered</string>
     <style name="Theme.Material3.DayNight" parent="Theme.Material3.DayNight.NoActionBar">
         
     </style>

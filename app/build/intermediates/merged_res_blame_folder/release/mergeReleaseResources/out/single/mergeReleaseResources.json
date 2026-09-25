@@ -1,9 +1,5 @@
 [
     {
-        "merged": "com.example.smsgateway.app-release-37:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.smsgateway.app-main-38:/mipmap-anydpi-v26/ic_launcher_round.xml"
-    },
-    {
         "merged": "com.example.smsgateway.app-release-37:/mipmap-hdpi_ic_launcher_round.webp.flat",
         "source": "com.example.smsgateway.app-main-38:/mipmap-hdpi/ic_launcher_round.webp"
     },
@@ -22,10 +18,6 @@
     {
         "merged": "com.example.smsgateway.app-release-37:/mipmap-mdpi_ic_launcher.webp.flat",
         "source": "com.example.smsgateway.app-main-38:/mipmap-mdpi/ic_launcher.webp"
-    },
-    {
-        "merged": "com.example.smsgateway.app-release-37:/layout_fragment_bluetooth.xml.flat",
-        "source": "com.example.smsgateway.app-main-38:/layout/fragment_bluetooth.xml"
     },
     {
         "merged": "com.example.smsgateway.app-release-37:/layout_fragment_wifi.xml.flat",
@@ -52,6 +44,10 @@
         "source": "com.example.smsgateway.app-main-38:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
+        "merged": "com.example.smsgateway.app-release-37:/mipmap-anydpi_ic_launcher.xml.flat",
+        "source": "com.example.smsgateway.app-main-38:/mipmap-anydpi/ic_launcher.xml"
+    },
+    {
         "merged": "com.example.smsgateway.app-release-37:/layout_fragment_usb.xml.flat",
         "source": "com.example.smsgateway.app-main-38:/layout/fragment_usb.xml"
     },
@@ -68,8 +64,8 @@
         "source": "com.example.smsgateway.app-main-38:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-release-37:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.smsgateway.app-main-38:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.example.smsgateway.app-release-37:/mipmap-anydpi_ic_launcher_round.xml.flat",
+        "source": "com.example.smsgateway.app-main-38:/mipmap-anydpi/ic_launcher_round.xml"
     },
     {
         "merged": "com.example.smsgateway.app-release-37:/mipmap-xxhdpi_ic_launcher_round.webp.flat",

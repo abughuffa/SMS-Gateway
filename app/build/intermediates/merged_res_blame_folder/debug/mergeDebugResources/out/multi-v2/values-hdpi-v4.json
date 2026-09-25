@@ -4,7 +4,7 @@
             "outputFile": "com.example.smsgateway.app-mergeDebugResources-35:/values-hdpi-v4/values-hdpi-v4.xml",
             "map": [
                 {
-                    "source": "/home/mohammed/.gradle/caches/9.6.0/transforms/7dc1e9441aa6d7480cf79676064ef726/transformed/appcompat-1.7.0/res/values-hdpi-v4/values-hdpi-v4.xml",
+                    "source": "/home/mohammed/.gradle/caches/9.8.0/transforms/5d96abb767bb3da4e16cfbbe89e5cb09/transformed/appcompat-1.7.0/res/values-hdpi-v4/values-hdpi-v4.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

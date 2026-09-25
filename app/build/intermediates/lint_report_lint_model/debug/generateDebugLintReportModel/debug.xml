@@ -2,7 +2,7 @@
     name="debug"
     package="com.example.smsgateway"
     minSdkVersion="26"
-    targetSdkVersion="34"
+    targetSdkVersion="35"
     debuggable="true"
     mergedManifest="build/intermediates/merged_manifest/debug/processDebugMainManifest/AndroidManifest.xml"
     manifestMergeReport="build/outputs/logs/manifest-merger-debug-report.txt"
@@ -27,6 +27,6 @@
       type="MAIN"
       applicationId="com.example.smsgateway"
       generatedSourceFolders="build/generated/ap_generated_sources/debug/out:build/generated/data_binding_base_class_source_out/debug/out"
-      desugaredMethodsFiles="/home/mohammed/.gradle/caches/9.6.0/transforms/9e91a6fe1495c9a962cd9b2c287a51f6/transformed/D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="/home/mohammed/.gradle/caches/9.8.0/transforms/eba1ab09ce8e32c53893d34439633170/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

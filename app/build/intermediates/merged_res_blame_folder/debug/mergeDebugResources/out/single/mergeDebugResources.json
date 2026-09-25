@@ -20,6 +20,10 @@
         "source": "com.example.smsgateway.app-main-39:/mipmap-hdpi/ic_launcher.webp"
     },
     {
+        "merged": "com.example.smsgateway.app-debug-37:/mipmap-anydpi_ic_launcher_round.xml.flat",
+        "source": "com.example.smsgateway.app-main-39:/mipmap-anydpi/ic_launcher_round.xml"
+    },
+    {
         "merged": "com.example.smsgateway.app-debug-37:/mipmap-xxxhdpi_ic_launcher.webp.flat",
         "source": "com.example.smsgateway.app-main-39:/mipmap-xxxhdpi/ic_launcher.webp"
     },
@@ -28,24 +32,12 @@
         "source": "com.example.smsgateway.app-main-39:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/layout_fragment_bluetooth.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/layout/fragment_bluetooth.xml"
-    },
-    {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-anydpi-v26/ic_launcher_round.xml"
-    },
-    {
         "merged": "com.example.smsgateway.app-debug-37:/layout_activity_main.xml.flat",
         "source": "com.example.smsgateway.app-main-39:/layout/activity_main.xml"
     },
     {
         "merged": "com.example.smsgateway.app-debug-37:/drawable_ic_launcher_foreground.xml.flat",
         "source": "com.example.smsgateway.app-main-39:/drawable/ic_launcher_foreground.xml"
-    },
-    {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
         "merged": "com.example.smsgateway.app-debug-37:/mipmap-xhdpi_ic_launcher_round.webp.flat",
@@ -70,6 +62,10 @@
     {
         "merged": "com.example.smsgateway.app-debug-37:/mipmap-xhdpi_ic_launcher.webp.flat",
         "source": "com.example.smsgateway.app-main-39:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.smsgateway.app-debug-37:/mipmap-anydpi_ic_launcher.xml.flat",
+        "source": "com.example.smsgateway.app-main-39:/mipmap-anydpi/ic_launcher.xml"
     },
     {
         "merged": "com.example.smsgateway.app-debug-37:/mipmap-mdpi_ic_launcher.webp.flat",
