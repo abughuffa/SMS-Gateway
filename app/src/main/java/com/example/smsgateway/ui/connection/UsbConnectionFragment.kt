@@ -51,7 +51,7 @@ class UsbConnectionFragment : Fragment() {
             Toast.makeText(requireContext(), "USB test triggered", Toast.LENGTH_SHORT).show()
         }
 
-        vm.update { it.copy(mode = ConnectionMode.USB) }
+        //vm.update { it.copy(mode = ConnectionMode.USB) }
         viewLifecycleOwner.lifecycleScope.launch {
             vm.usbStatus.collect { tvStatus.text = "Status: $it" }
         }

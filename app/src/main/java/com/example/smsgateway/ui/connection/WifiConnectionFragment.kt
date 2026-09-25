@@ -63,7 +63,7 @@ class WifiConnectionFragment : Fragment() {
         v.findViewById<Button>(R.id.btnWifiRefreshIp)
             .setOnClickListener { refreshIps() }
 
-        vm.update { it.copy(mode = ConnectionMode.WIFI) }
+        //vm.update { it.copy(mode = ConnectionMode.WIFI) }
         viewLifecycleOwner.lifecycleScope.launch {
             vm.wifiStatus.collect { tvStatus.text = "Status: $it" }
         }

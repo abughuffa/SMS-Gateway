@@ -2,6 +2,7 @@ R_DEF: Internal format may change without notice
 local
 color ic_launcher_background
 drawable ic_launcher_foreground
+id actConnectionType
 id btnBtDiscover
 id btnBtPaired
 id btnCancel
@@ -18,17 +19,17 @@ id etBtUuid
 id etUsbPort
 id etWifiPort
 id etWifiToken
+id fragmentContainer
 id lvPaired
 id rbAccessory
 id rbAdb
 id rgUsbMode
-id tabLayout
+id tilConnectionType
 id tvBtStatus
 id tvIpList
 id tvState
 id tvUsbStatus
 id tvWifiStatus
-id viewPager
 layout activity_connection
 layout activity_main
 layout fragment_bluetooth

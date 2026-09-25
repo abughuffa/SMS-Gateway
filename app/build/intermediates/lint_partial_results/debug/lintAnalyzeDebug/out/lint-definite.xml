@@ -37,11 +37,11 @@
     <incident
         id="AndroidGradlePluginVersion"
         severity="warning"
-        message="A newer version of Gradle than 9.6.0 is available: 9.7.1">
+        message="A newer version of Gradle than 9.6.0 is available: 9.8.0">
         <fix-replace
-            description="Update to 9.7.1"
+            description="Update to 9.8.0"
             oldString="9.6.0"
-            replacement="9.7.1"
+            replacement="9.8.0"
             priority="0"/>
         <location
             file="$HOME/Projects/SmsGateway/gradle/wrapper/gradle-wrapper.properties"
@@ -302,12 +302,12 @@
         message="Cancel button should be on the left (was &quot;&quot;Save &amp; Apply&quot; | Cancel&quot;, should be &quot;Cancel | &quot;Save &amp; Apply&quot;&quot;)">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-            line="34"
+            line="47"
             column="10"
-            startOffset="1141"
-            endLine="34"
+            startOffset="1805"
+            endLine="47"
             endColumn="16"
-            endOffset="1147"/>
+            endOffset="1811"/>
     </incident>
 
     <incident
@@ -322,8 +322,8 @@
                 value="?android:attr/buttonBarStyle">
                 <range
                     file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-                    startOffset="719"
-                    endOffset="1415"/>
+                    startOffset="1383"
+                    endOffset="2079"/>
             </fix-attribute>
             <fix-attribute
                 description="Set style=&quot;?android:attr/buttonBarButtonStyle&quot;"
@@ -331,8 +331,8 @@
                 value="?android:attr/buttonBarButtonStyle">
                 <range
                     file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-                    startOffset="912"
-                    endOffset="1130"/>
+                    startOffset="1576"
+                    endOffset="1794"/>
             </fix-attribute>
             <fix-attribute
                 description="Set style=&quot;?android:attr/buttonBarButtonStyle&quot;"
@@ -340,18 +340,18 @@
                 value="?android:attr/buttonBarButtonStyle">
                 <range
                     file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-                    startOffset="1140"
-                    endOffset="1395"/>
+                    startOffset="1804"
+                    endOffset="2059"/>
             </fix-attribute>
         </fix-composite>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-            line="27"
+            line="40"
             column="10"
-            startOffset="913"
-            endLine="27"
+            startOffset="1577"
+            endLine="40"
             endColumn="16"
-            endOffset="919"/>
+            endOffset="1583"/>
     </incident>
 
     <incident
@@ -366,8 +366,8 @@
                 value="?android:attr/buttonBarStyle">
                 <range
                     file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-                    startOffset="719"
-                    endOffset="1415"/>
+                    startOffset="1383"
+                    endOffset="2079"/>
             </fix-attribute>
             <fix-attribute
                 description="Set style=&quot;?android:attr/buttonBarButtonStyle&quot;"
@@ -375,8 +375,8 @@
                 value="?android:attr/buttonBarButtonStyle">
                 <range
                     file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-                    startOffset="912"
-                    endOffset="1130"/>
+                    startOffset="1576"
+                    endOffset="1794"/>
             </fix-attribute>
             <fix-attribute
                 description="Set style=&quot;?android:attr/buttonBarButtonStyle&quot;"
@@ -384,18 +384,18 @@
                 value="?android:attr/buttonBarButtonStyle">
                 <range
                     file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-                    startOffset="1140"
-                    endOffset="1395"/>
+                    startOffset="1804"
+                    endOffset="2059"/>
             </fix-attribute>
         </fix-composite>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-            line="34"
+            line="47"
             column="10"
-            startOffset="1141"
-            endLine="34"
+            startOffset="1805"
+            endLine="47"
             endColumn="16"
-            endOffset="1147"/>
+            endOffset="1811"/>
     </incident>
 
     <incident
@@ -406,10 +406,10 @@
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/ui/connection/BluetoothConnectionFragment.kt"
             line="88"
             column="51"
-            startOffset="3439"
+            startOffset="3441"
             endLine="88"
             endColumn="64"
-            endOffset="3452"/>
+            endOffset="3454"/>
     </incident>
 
     <incident
@@ -420,10 +420,10 @@
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/ui/connection/BluetoothConnectionFragment.kt"
             line="88"
             column="52"
-            startOffset="3440"
+            startOffset="3442"
             endLine="88"
             endColumn="60"
-            endOffset="3448"/>
+            endOffset="3450"/>
     </incident>
 
     <incident
@@ -504,10 +504,10 @@
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/ui/connection/UsbConnectionFragment.kt"
             line="56"
             column="52"
-            startOffset="2021"
+            startOffset="2023"
             endLine="56"
             endColumn="65"
-            endOffset="2034"/>
+            endOffset="2036"/>
     </incident>
 
     <incident
@@ -518,10 +518,10 @@
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/ui/connection/UsbConnectionFragment.kt"
             line="56"
             column="53"
-            startOffset="2022"
+            startOffset="2024"
             endLine="56"
             endColumn="61"
-            endOffset="2030"/>
+            endOffset="2032"/>
     </incident>
 
     <incident
@@ -588,10 +588,10 @@
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/ui/connection/WifiConnectionFragment.kt"
             line="68"
             column="53"
-            startOffset="2489"
+            startOffset="2491"
             endLine="68"
             endColumn="66"
-            endOffset="2502"/>
+            endOffset="2504"/>
     </incident>
 
     <incident
@@ -602,10 +602,24 @@
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/ui/connection/WifiConnectionFragment.kt"
             line="68"
             column="54"
-            startOffset="2490"
+            startOffset="2492"
             endLine="68"
             endColumn="62"
-            endOffset="2498"/>
+            endOffset="2500"/>
+    </incident>
+
+    <incident
+        id="HardcodedText"
+        severity="warning"
+        message="Hardcoded string &quot;Connection type&quot;, should use `@string` resource">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
+            line="15"
+            column="9"
+            startOffset="662"
+            endLine="15"
+            endColumn="39"
+            endOffset="692"/>
     </incident>
 
     <incident
@@ -614,12 +628,12 @@
         message="Hardcoded string &quot;Save &amp; Apply&quot;, should use `@string` resource">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-            line="32"
+            line="45"
             column="13"
-            startOffset="1096"
-            endLine="32"
+            startOffset="1760"
+            endLine="45"
             endColumn="44"
-            endOffset="1127"/>
+            endOffset="1791"/>
     </incident>
 
     <incident
@@ -628,12 +642,12 @@
         message="Hardcoded string &quot;Cancel&quot;, should use `@string` resource">
         <location
             file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/layout/activity_connection.xml"
-            line="40"
+            line="53"
             column="13"
-            startOffset="1371"
-            endLine="40"
+            startOffset="2035"
+            endLine="53"
             endColumn="34"
-            endOffset="1392"/>
+            endOffset="2056"/>
     </incident>
 
     <incident

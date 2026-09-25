@@ -38,7 +38,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of Gradle than 9.6.0 is available: 9.7.1"
+        message="A newer version of Gradle than 9.6.0 is available: 9.8.0"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
@@ -285,7 +285,7 @@
         errorLine2="         ~~~~~~">
         <location
             file="/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml"
-            line="34"
+            line="47"
             column="10"/>
     </issue>
 
@@ -303,7 +303,7 @@
         errorLine2="         ~~~~~~">
         <location
             file="/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml"
-            line="27"
+            line="40"
             column="10"/>
     </issue>
 
@@ -321,7 +321,7 @@
         errorLine2="         ~~~~~~">
         <location
             file="/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml"
-            line="34"
+            line="47"
             column="10"/>
     </issue>
 
@@ -598,6 +598,22 @@
     <issue
         id="HardcodedText"
         severity="Warning"
+        message="Hardcoded string &quot;Connection type&quot;, should use `@string` resource"
+        category="Internationalization"
+        priority="5"
+        summary="Hardcoded text"
+        explanation="Hardcoding text attributes directly in layout files is bad for several reasons:&#xA;&#xA;* When creating configuration variations (for example for landscape or portrait) you have to repeat the actual text (and keep it up to date when making changes)&#xA;&#xA;* The application cannot be translated to other languages by just adding new translations for existing string resources.&#xA;&#xA;There are quickfixes to automatically extract this hardcoded string into a resource lookup."
+        errorLine1="        android:hint=&quot;Connection type&quot;>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml"
+            line="15"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        severity="Warning"
         message="Hardcoded string &quot;Save &amp; Apply&quot;, should use `@string` resource"
         category="Internationalization"
         priority="5"
@@ -607,7 +623,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml"
-            line="32"
+            line="45"
             column="13"/>
     </issue>
 
@@ -623,7 +639,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml"
-            line="40"
+            line="53"
             column="13"/>
     </issue>
 

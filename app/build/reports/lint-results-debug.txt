@@ -28,7 +28,7 @@
 
    https://developer.android.com/distribute/best-practices/develop/target-sdk.html
 
-/home/mohammed/Projects/SmsGateway/gradle/wrapper/gradle-wrapper.properties:3: Warning: A newer version of Gradle than 9.6.0 is available: 9.7.1 [AndroidGradlePluginVersion]
+/home/mohammed/Projects/SmsGateway/gradle/wrapper/gradle-wrapper.properties:3: Warning: A newer version of Gradle than 9.6.0 is available: 9.8.0 [AndroidGradlePluginVersion]
 distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.0-bin.zip
                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -139,7 +139,7 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.0-bin.zip
    </lint>
    ```
 
-/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:34: Warning: Cancel button should be on the left (was ""Save & Apply" | Cancel", should be "Cancel | "Save & Apply"") [ButtonOrder]
+/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:47: Warning: Cancel button should be on the left (was ""Save & Apply" | Cancel", should be "Cancel | "Save & Apply"") [ButtonOrder]
         <Button
          ~~~~~~
 
@@ -158,10 +158,10 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.0-bin.zip
 
    https://d.android.com/r/studio-ui/designer/material/dialogs
 
-/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:27: Warning: Buttons in button bars should be borderless; use style="?android:attr/buttonBarButtonStyle" (and ?android:attr/buttonBarStyle on the parent) [ButtonStyle]
+/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:40: Warning: Buttons in button bars should be borderless; use style="?android:attr/buttonBarButtonStyle" (and ?android:attr/buttonBarStyle on the parent) [ButtonStyle]
         <Button
          ~~~~~~
-/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:34: Warning: Buttons in button bars should be borderless; use style="?android:attr/buttonBarButtonStyle" (and ?android:attr/buttonBarStyle on the parent) [ButtonStyle]
+/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:47: Warning: Buttons in button bars should be borderless; use style="?android:attr/buttonBarButtonStyle" (and ?android:attr/buttonBarStyle on the parent) [ButtonStyle]
         <Button
          ~~~~~~
 
@@ -231,10 +231,13 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.0-bin.zip
 
    https://developer.android.com/guide/topics/resources/localization.html
 
-/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:32: Warning: Hardcoded string "Save & Apply", should use @string resource [HardcodedText]
+/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:15: Warning: Hardcoded string "Connection type", should use @string resource [HardcodedText]
+        android:hint="Connection type">
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:45: Warning: Hardcoded string "Save & Apply", should use @string resource [HardcodedText]
             android:text="Save &amp; Apply" />
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:40: Warning: Hardcoded string "Cancel", should use @string resource [HardcodedText]
+/home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_connection.xml:53: Warning: Hardcoded string "Cancel", should use @string resource [HardcodedText]
             android:text="Cancel" />
             ~~~~~~~~~~~~~~~~~~~~~
 /home/mohammed/Projects/SmsGateway/app/src/main/res/layout/activity_main.xml:11: Warning: Hardcoded string "SMS Gateway", should use @string resource [HardcodedText]
@@ -324,4 +327,4 @@ distributionUrl=https\://services.gradle.org/distributions/gradle-9.6.0-bin.zip
    There are quickfixes to automatically extract this hardcoded string into a
    resource lookup.
 
-0 errors, 61 warnings
+0 errors, 62 warnings
