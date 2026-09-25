@@ -1,0 +1,79 @@
+package com.example.smsgateway.ui.connection
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.smsgateway.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.Inet4Address
+import java.net.NetworkInterface
+
+class WifiConnectionFragment : Fragment() {
+
+    private val vm: ConnectionViewModel by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, s: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_wifi, container, false)
+
+    override fun onViewCreated(v: View, s: Bundle?) {
+        val cfg = vm.config.value
+        val etPort = v.findViewById<EditText>(R.id.etWifiPort)
+        val etToken = v.findViewById<EditText>(R.id.etWifiToken)
+        val cbAll = v.findViewById<CheckBox>(R.id.cbBindAll)
+        val tvStatus = v.findViewById<TextView>(R.id.tvWifiStatus)
+        val tvIps = v.findViewById<TextView>(R.id.tvIpList)
+
+        etPort.setText(cfg.wifiPort.toString())
+        etToken.setText(cfg.wifiToken ?: "")
+        cbAll.isChecked = cfg.wifiBindAll
+
+        etPort.setOnFocusChangeListener { _, _ ->
+            etPort.text.toString().toIntOrNull()?.let { p ->
+                vm.update { it.copy(wifiPort = p) }
+            }
+        }
+        etToken.setOnFocusChangeListener { _, _ ->
+            vm.update {
+                it.copy(
+                    wifiToken = etToken.text.toString()
+                        .takeIf { t -> t.isNotBlank() }
+                )
+            }
+        }
+        cbAll.setOnCheckedChangeListener { _, c ->
+            vm.update { it.copy(wifiBindAll = c) }
+        }
+
+        fun refreshIps() {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val ips = withContext(Dispatchers.IO) { localIpv4Addresses() }
+                tvIps.text = "Local IPs:\n" +
+                    (if (ips.isEmpty()) "(none)" else ips.joinToString("\n"))
+            }
+        }
+        refreshIps()
+        v.findViewById<Button>(R.id.btnWifiRefreshIp)
+            .setOnClickListener { refreshIps() }
+
+        vm.update { it.copy(mode = ConnectionMode.WIFI) }
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.wifiStatus.collect { tvStatus.text = "Status: $it" }
+        }
+    }
+
+    private fun localIpv4Addresses(): List<String> = try {
+        NetworkInterface.getNetworkInterfaces().toList()
+            .filter { it.isUp && !it.isLoopback }
+            .flatMap { it.inetAddresses.toList() }
+            .filterIsInstance<Inet4Address>()
+            .mapNotNull { it.hostAddress }
+    } catch (_: Exception) { emptyList() }
+}

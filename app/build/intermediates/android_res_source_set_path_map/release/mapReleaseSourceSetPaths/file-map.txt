@@ -1,0 +1,8 @@
+com.example.smsgateway.app-pngs-0 /home/mohammed/Projects/SmsGateway/app/build/generated/res/pngs/release
+com.example.smsgateway.app-updated_navigation_xml-1 /home/mohammed/Projects/SmsGateway/app/build/generated/updated_navigation_xml/release
+com.example.smsgateway.app-packageReleaseResources-2 /home/mohammed/Projects/SmsGateway/app/build/intermediates/incremental/release/packageReleaseResources/merged.dir
+com.example.smsgateway.app-packageReleaseResources-3 /home/mohammed/Projects/SmsGateway/app/build/intermediates/incremental/release/packageReleaseResources/stripped.dir
+com.example.smsgateway.app-release-4 /home/mohammed/Projects/SmsGateway/app/build/intermediates/merged_res/release/mergeReleaseResources
+com.example.smsgateway.app-main-5 /home/mohammed/Projects/SmsGateway/app/src/main/res
+com.example.smsgateway.app-release-6 /home/mohammed/Projects/SmsGateway/app/src/release/res
+gradleHome-0 /home/mohammed/.gradle

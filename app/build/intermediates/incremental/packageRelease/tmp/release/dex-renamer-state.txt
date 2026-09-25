@@ -1,0 +1,7 @@
+#Thu Sep 24 17:18:33 EET 2026
+base.0=/home/mohammed/Projects/SmsGateway/app/build/intermediates/dex/release/mergeDexRelease/classes.dex
+base.1=/home/mohammed/Projects/SmsGateway/app/build/intermediates/dex/release/mergeDexRelease/classes2.dex
+path.0=classes.dex
+path.1=classes2.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
