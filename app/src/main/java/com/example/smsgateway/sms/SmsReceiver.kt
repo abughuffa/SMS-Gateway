@@ -16,7 +16,7 @@ class SmsReceiver : BroadcastReceiver() {
         if (intent.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) return
 
         val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
-        val db = InboxDb(context.applicationContext)
+        val db = InboxDb.get(context.applicationContext)
         val now = System.currentTimeMillis()
 
         for (m in messages) {

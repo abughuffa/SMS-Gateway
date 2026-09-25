@@ -13,10 +13,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Network -->
+    <!-- Network (Ktor HTTP server) -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- USB -->
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
@@ -61,12 +59,23 @@
                 android:value="SMS gateway server" />
         </service>
 
+        <!-- Inbound SMS (system-broadcast, protected by BROADCAST_SMS) -->
         <receiver
             android:name=".sms.SmsReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Outbound SMS status (delivery reports from telephony) -->
+        <receiver
+            android:name=".sms.SmsStatusReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.smsgateway.SMS_SENT" />
+                <action android:name="com.example.smsgateway.SMS_DELIVERED" />
             </intent-filter>
         </receiver>
     </application>

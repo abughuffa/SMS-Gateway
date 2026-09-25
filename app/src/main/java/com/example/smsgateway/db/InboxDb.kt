@@ -6,7 +6,19 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.smsgateway.model.InboxMessage
 
-class InboxDb(ctx: Context) : SQLiteOpenHelper(ctx, "gateway.db", null, 1) {
+class InboxDb private constructor(ctx: Context) :
+    SQLiteOpenHelper(ctx.applicationContext, "gateway.db", null, DB_VERSION) {
+
+    companion object {
+        private const val DB_VERSION = 1
+
+        @Volatile private var INSTANCE: InboxDb? = null
+
+        fun get(ctx: Context): InboxDb =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: InboxDb(ctx.applicationContext).also { INSTANCE = it }
+            }
+    }
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(

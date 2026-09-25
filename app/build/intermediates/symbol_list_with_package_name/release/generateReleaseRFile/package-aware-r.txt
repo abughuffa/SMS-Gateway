@@ -1,6 +1,7 @@
 com.example.smsgateway
 color ic_launcher_background
 drawable ic_launcher_foreground
+drawable ic_stat_gateway
 id actConnectionType
 id btnCancel
 id btnConnection

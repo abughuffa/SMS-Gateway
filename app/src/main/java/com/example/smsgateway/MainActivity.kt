@@ -20,9 +20,20 @@ import com.example.smsgateway.ui.connection.ConnectionActivity
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var tvState: TextView
+
     private val permLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { /* results ignored — user can retry */ }
+    ) { results ->
+        val allGranted = results.values.all { it }
+        if (allGranted) {
+            startGatewayService()
+        } else {
+            // Tell the user clearly, don't silently start a broken service.
+            tvState.text = getString(R.string.service_stopped) +
+                    " — missing permissions"
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -44,15 +55,10 @@ class MainActivity : AppCompatActivity() {
             WindowInsetsCompat.CONSUMED
         }
 
-        val tvState = findViewById<TextView>(R.id.tvState)
+        tvState = findViewById(R.id.tvState)
 
         findViewById<Button>(R.id.btnStart).setOnClickListener {
             requestNeededPermissions()
-            ContextCompat.startForegroundService(
-                this,
-                Intent(this, GatewayService::class.java)
-            )
-            tvState.text = getString(R.string.service_starting)
         }
 
         findViewById<Button>(R.id.btnStop).setOnClickListener {
@@ -65,6 +71,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun startGatewayService() {
+        ContextCompat.startForegroundService(
+            this,
+            Intent(this, GatewayService::class.java)
+        )
+        tvState.text = getString(R.string.service_starting)
+    }
+
+    /**
+     * Checks all required runtime permissions; if any are missing, requests
+     * them and defers starting the service until they are all granted.
+     */
     private fun requestNeededPermissions() {
         val needed = mutableListOf<String>()
 
@@ -86,7 +104,9 @@ class MainActivity : AppCompatActivity() {
             ) needed += Manifest.permission.POST_NOTIFICATIONS
         }
 
-        if (needed.isNotEmpty()) {
+        if (needed.isEmpty()) {
+            startGatewayService()
+        } else {
             permLauncher.launch(needed.toTypedArray())
         }
     }

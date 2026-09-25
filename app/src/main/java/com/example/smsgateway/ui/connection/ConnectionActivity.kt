@@ -27,10 +27,27 @@ class ConnectionActivity : AppCompatActivity() {
     private var currentMode: ConnectionMode? = null
     private lateinit var act: MaterialAutoCompleteTextView
 
+    /** Snapshot taken on first entry so Cancel can restore it. */
+    private lateinit var initialConfig: ConnectionConfig
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_connection)
+
+        // Only snapshot on first creation. On rotation, restore the saved one
+        // so Cancel still reverts to the config the user saw when they opened
+        // the screen, not to a partially-edited state.
+        initialConfig = savedInstanceState?.let {
+            ConnectionConfig(
+                mode = ConnectionMode.valueOf(it.getString(STATE_MODE)!!),
+                wifiPort = it.getInt(STATE_WIFI_PORT),
+                wifiBindAll = it.getBoolean(STATE_WIFI_BIND_ALL),
+                wifiToken = it.getString(STATE_WIFI_TOKEN),
+                usbMode = UsbMode.valueOf(it.getString(STATE_USB_MODE)!!),
+                usbPort = it.getInt(STATE_USB_PORT)
+            )
+        } ?: ConnectionPrefs.load(this)
 
         val root = findViewById<View>(R.id.root)
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
@@ -48,10 +65,7 @@ class ConnectionActivity : AppCompatActivity() {
         }
 
         act = findViewById(R.id.actConnectionType)
-
-        act.setAdapter(
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, labels)
-        )
+        act.setAdapter(ArrayAdapter(this, android.R.layout.simple_list_item_1, labels))
 
         val saved = vm.config.value.mode
         val initialIndex = modes.indexOf(saved).takeIf { it >= 0 } ?: 0
@@ -63,7 +77,12 @@ class ConnectionActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnSave).setOnClickListener { finish() }
-        findViewById<Button>(R.id.btnCancel).setOnClickListener { finish() }
+
+        findViewById<Button>(R.id.btnCancel).setOnClickListener {
+            ConnectionPrefs.save(this, initialConfig)
+            vm.update { initialConfig }
+            finish()
+        }
 
         lifecycleScope.launch {
             vm.config.collect { cfg ->
@@ -74,6 +93,16 @@ class ConnectionActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_MODE, initialConfig.mode.name)
+        outState.putInt(STATE_WIFI_PORT, initialConfig.wifiPort)
+        outState.putBoolean(STATE_WIFI_BIND_ALL, initialConfig.wifiBindAll)
+        outState.putString(STATE_WIFI_TOKEN, initialConfig.wifiToken)
+        outState.putString(STATE_USB_MODE, initialConfig.usbMode.name)
+        outState.putInt(STATE_USB_PORT, initialConfig.usbPort)
     }
 
     private fun showFragment(mode: ConnectionMode) {
@@ -92,5 +121,14 @@ class ConnectionActivity : AppCompatActivity() {
             setReorderingAllowed(true)
             replace(R.id.fragmentContainer, fragment)
         }
+    }
+
+    private companion object {
+        const val STATE_MODE = "snap_mode"
+        const val STATE_WIFI_PORT = "snap_wifi_port"
+        const val STATE_WIFI_BIND_ALL = "snap_wifi_bind_all"
+        const val STATE_WIFI_TOKEN = "snap_wifi_token"
+        const val STATE_USB_MODE = "snap_usb_mode"
+        const val STATE_USB_PORT = "snap_usb_port"
     }
 }

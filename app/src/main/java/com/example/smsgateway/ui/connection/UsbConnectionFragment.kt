@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -45,9 +46,11 @@ class UsbConnectionFragment : Fragment() {
                 )
             }
         }
-        etPort.setOnFocusChangeListener { _, _ ->
-            etPort.text.toString().toIntOrNull()?.let { p ->
-                vm.update { it.copy(usbPort = p) }
+
+        // Persist on every edit — not just on focus loss.
+        etPort.doAfterTextChanged { text ->
+            text?.toString()?.toIntOrNull()?.let { p ->
+                if (p in 1..65535) vm.update { it.copy(usbPort = p) }
             }
         }
 

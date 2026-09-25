@@ -23,20 +23,23 @@ object ConnectionPrefs {
 
     fun load(ctx: Context): ConnectionConfig {
         val p = prefs(ctx)
+
         val rawMode = p.getString("mode", ConnectionMode.NONE.name)!!
-        // Guard against an old "BLUETOOTH" value from a previous install.
+        // Guard against stale / corrupt values from previous installs.
         val mode = runCatching { ConnectionMode.valueOf(rawMode) }
             .getOrDefault(ConnectionMode.NONE)
 
+        val rawUsb = p.getString("usb_mode", UsbMode.ADB_FORWARD.name)!!
+        val usbMode = runCatching { UsbMode.valueOf(rawUsb) }
+            .getOrDefault(UsbMode.ADB_FORWARD)
+
         return ConnectionConfig(
             mode = mode,
-            wifiPort = p.getInt("wifi_port", 8080),
+            wifiPort = p.getInt("wifi_port", 8080).coerceIn(1, 65535),
             wifiBindAll = p.getBoolean("wifi_bind_all", true),
             wifiToken = p.getString("wifi_token", null),
-            usbMode = UsbMode.valueOf(
-                p.getString("usb_mode", UsbMode.ADB_FORWARD.name)!!
-            ),
-            usbPort = p.getInt("usb_port", 8081)
+            usbMode = usbMode,
+            usbPort = p.getInt("usb_port", 8081).coerceIn(1, 65535)
         )
     }
 

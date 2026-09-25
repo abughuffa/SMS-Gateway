@@ -17,7 +17,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import java.util.UUID
@@ -30,14 +29,24 @@ object WifiServer {
     @Volatile private var startedAt: Long = 0
     @Volatile private var lastStatus: String = "Stopped"
     @Volatile private var apiKey: String? = null
+    @Volatile private var modeLabel: String = "WIFI"
     @Volatile private lateinit var db: InboxDb
     @Volatile private lateinit var appContext: Context
     @Volatile private var statusListener: ((String) -> Unit)? = null
 
-    fun configure(context: Context, token: String?, onStatus: (String) -> Unit) {
+    /**
+     * @param modeLabel what /status reports as `mode` — "WIFI", "USB_ADB", etc.
+     */
+    fun configure(
+        context: Context,
+        token: String?,
+        modeLabel: String = "WIFI",
+        onStatus: (String) -> Unit
+    ) {
         appContext = context.applicationContext
-        db = InboxDb(appContext)
+        db = InboxDb.get(appContext)
         apiKey = token?.takeIf { it.isNotBlank() }
+        this.modeLabel = modeLabel
         statusListener = onStatus
     }
 
@@ -69,12 +78,20 @@ object WifiServer {
         }
     }
 
-    fun stop() {
+    /**
+     * Stops Ktor. Suspends until the server is fully shut down so callers
+     * (e.g. GatewayService.onStartCommand) can safely restart it afterwards.
+     */
+    suspend fun stop() {
         val s = server ?: return
         server = null
         startedAt = 0
-        runBlocking {
-            try { s.stop(500, 1000) } catch (t: Throwable) { Log.w(TAG, "Stop error", t) }
+        withContext(Dispatchers.IO) {
+            try {
+                s.stop(500, 1000)
+            } catch (t: Throwable) {
+                Log.w(TAG, "Stop error", t)
+            }
         }
         setStatus("Stopped")
         Log.i(TAG, "Ktor stopped")
@@ -139,7 +156,8 @@ object WifiServer {
                         context = appContext,
                         phone = req.to,
                         message = req.body,
-                        simSlot = req.simSlot ?: 0
+                        simSlot = req.simSlot ?: 0,
+                        reference = ref
                     )
                 }
                 if (result.ok) db.incr("stat.sent")
@@ -187,7 +205,7 @@ object WifiServer {
         val uptimeSec = if (startedAt == 0L) 0L
         else (System.currentTimeMillis() - startedAt) / 1000
         return StatusResponse(
-            mode = "WIFI",
+            mode = modeLabel,
             uptimeSec = uptimeSec,
             simReady = SmsSender.isSimReady(appContext),
             sentCount = db.getMeta("stat.sent")?.toIntOrNull() ?: 0,

@@ -12,7 +12,6 @@ import android.os.ParcelFileDescriptor
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.smsgateway.db.InboxDb
-import com.example.smsgateway.model.InboxMessage
 import com.example.smsgateway.sms.SmsSender
 import com.example.smsgateway.ui.connection.UsbMode
 import kotlinx.coroutines.CoroutineScope
@@ -23,9 +22,10 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import java.io.BufferedReader
@@ -58,7 +58,7 @@ object UsbServer {
     fun configure(context: Context, onStatus: (String) -> Unit) {
         val ctx = context.applicationContext
         appContext = ctx
-        db = InboxDb(ctx)
+        db = InboxDb.get(ctx)
         statusListener = onStatus
         registerPermissionReceiver(ctx)
     }
@@ -66,7 +66,7 @@ object UsbServer {
     fun isRunning(): Boolean = running
     fun status(): String = lastStatus
 
-    fun start(mode: UsbMode, usbPort: Int, wifiPort: Int, wifiBindAll: Boolean) {
+    fun start(mode: UsbMode, usbPort: Int, wifiPort: Int) {
         if (running) {
             Log.w(TAG, "start() ignored — already running")
             return
@@ -85,8 +85,13 @@ object UsbServer {
         }
     }
 
+    /**
+     * Stops the USB session. Idempotent and never blocks the caller.
+     * Does NOT cancel the object scope — call [shutdown] for that.
+     */
     fun stop() {
         val wasRunning = running
+        val modeBefore = currentMode
         running = false
 
         ioJob?.cancel()
@@ -95,8 +100,11 @@ object UsbServer {
         try { accessoryFd?.close() } catch (_: Throwable) {}
         accessoryFd = null
 
-        if (wasRunning && currentMode == UsbMode.ADB_FORWARD) {
-            try { WifiServer.stop() } catch (_: Throwable) {}
+        if (wasRunning && modeBefore == UsbMode.ADB_FORWARD) {
+            // Fire-and-forget; WifiServer.stop() is suspend/IO-safe.
+            scope.launch {
+                try { WifiServer.stop() } catch (_: Throwable) {}
+            }
         }
 
         currentMode = null
@@ -104,9 +112,29 @@ object UsbServer {
         Log.i(TAG, "USB stopped")
     }
 
+    /**
+     * Fully tears down the object: unregisters the broadcast receiver
+     * and cancels the shared coroutine scope. After this, [configure]
+     * must be called again before [start].
+     */
+    fun shutdown() {
+        stop()
+        permissionReceiver?.let {
+            try { appContext?.unregisterReceiver(it) } catch (_: Throwable) {}
+        }
+        permissionReceiver = null
+        statusListener = null
+        scope.cancel()
+        Log.i(TAG, "UsbServer shut down")
+    }
+
     private fun startAdbForward(ctx: Context, usbPort: Int, wifiPort: Int) {
         try {
-            WifiServer.configure(ctx, null) { s -> setStatus("ADB: $s") }
+            WifiServer.configure(
+                context = ctx,
+                token = null,
+                modeLabel = "USB_ADB"
+            ) { s -> setStatus("ADB: $s") }
             WifiServer.start(port = wifiPort, bindAll = false)
             setStatus("Ready. On PC run: adb forward tcp:$usbPort tcp:$wifiPort")
             Log.i(TAG, "ADB_FORWARD active on 127.0.0.1:$wifiPort (host port $usbPort)")
@@ -254,6 +282,8 @@ object UsbServer {
                     val to = obj["to"]?.toString()?.trim('"') ?: ""
                     val body = obj["body"]?.toString()?.trim('"') ?: ""
                     val slot = obj["simSlot"]?.toString()?.toIntOrNull() ?: 0
+                    val ref = obj["reference"]?.toString()?.trim('"')
+                        ?: java.util.UUID.randomUUID().toString()
 
                     if (to.isBlank() || body.isBlank()) {
                         buildJsonObject {
@@ -261,10 +291,11 @@ object UsbServer {
                             put("error", "'to' and 'body' are required")
                         }.toString()
                     } else {
-                        val res = SmsSender.send(ctx, to, body, slot)
+                        val res = SmsSender.send(ctx, to, body, slot, ref)
                         if (res.ok) database.incr("stat.sent")
                         buildJsonObject {
                             put("ok", res.ok)
+                            put("id", ref)
                             put("error", res.error ?: "")
                         }.toString()
                     }
@@ -274,15 +305,19 @@ object UsbServer {
                     val since = obj["since"]?.toString()?.toLongOrNull() ?: 0L
                     val limit = obj["limit"]?.toString()?.toIntOrNull() ?: 200
                     val list = database.since(since, limit)
+                    // Proper JSON array, not a JSON-in-string.
                     buildJsonObject {
                         put("count", list.size)
-                        put(
-                            "messages",
-                            json.encodeToString(
-                                ListSerializer(InboxMessage.serializer()),
-                                list
-                            )
-                        )
+                        put("messages", buildJsonArray {
+                            list.forEach { m ->
+                                add(buildJsonObject {
+                                    put("id", m.id)
+                                    put("from", m.from)
+                                    put("body", m.body)
+                                    put("ts", m.ts)
+                                })
+                            }
+                        })
                     }.toString()
                 }
                 else -> """{"error":"unknown command"}"""
@@ -299,14 +334,5 @@ object UsbServer {
         lastStatus = s
         statusListener?.invoke(s)
         Log.i(TAG, s)
-    }
-
-    fun shutdown() {
-        stop()
-        permissionReceiver?.let {
-            try { appContext?.unregisterReceiver(it) } catch (_: Throwable) {}
-        }
-        permissionReceiver = null
-        scope.cancel()
     }
 }

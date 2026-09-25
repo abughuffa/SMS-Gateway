@@ -12,6 +12,10 @@
         "source": "com.example.smsgateway.app-main-38:/mipmap-xhdpi/ic_launcher_round.webp"
     },
     {
+        "merged": "com.example.smsgateway.app-release-37:/drawable_ic_stat_gateway.xml.flat",
+        "source": "com.example.smsgateway.app-main-38:/drawable/ic_stat_gateway.xml"
+    },
+    {
         "merged": "com.example.smsgateway.app-release-37:/mipmap-xxhdpi_ic_launcher.webp.flat",
         "source": "com.example.smsgateway.app-main-38:/mipmap-xxhdpi/ic_launcher.webp"
     },

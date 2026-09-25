@@ -8,12 +8,40 @@
         <fix-data missing="android.permission.POST_NOTIFICATIONS"/>
         <location
             file="${:app*debug*MAIN*sourceProvider*0*javaDir*0}/com/example/smsgateway/service/GatewayService.kt"
-            line="98"
+            line="126"
             column="9"
-            startOffset="3452"
-            endLine="99"
+            startOffset="4605"
+            endLine="127"
+            endColumn="55"
+            endOffset="4731"/>
+    </incident>
+
+    <incident
+        id="VectorRaster"
+        severity="warning"
+        message="">
+        <location
+            file="${:app*debug*MAIN*sourceProvider*0*resDir*0}/drawable/ic_stat_gateway.xml"
+            line="9"
+            column="28"
+            startOffset="287"
+            endLine="9"
             endColumn="48"
-            endOffset="3571"/>
+            endOffset="307"/>
+        <map>
+            <entry
+                name="containsFillType"
+                boolean="false"/>
+            <entry
+                name="containsGradient"
+                boolean="false"/>
+            <entry
+                name="folderVersion"
+                int="-1"/>
+            <entry
+                name="message"
+                string="Resource references will not work correctly in images generated for this vector icon for API &lt; %1$d; check generated icon to make sure it looks acceptable"/>
+        </map>
     </incident>
 
 </incidents>

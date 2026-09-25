@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -39,19 +40,22 @@ class WifiConnectionFragment : Fragment() {
         etToken.setText(cfg.wifiToken ?: "")
         cbAll.isChecked = cfg.wifiBindAll
 
-        etPort.setOnFocusChangeListener { _, _ ->
-            etPort.text.toString().toIntOrNull()?.let { p ->
-                vm.update { it.copy(wifiPort = p) }
+        // Persist port on every edit (with a sane range check).
+        etPort.doAfterTextChanged { text ->
+            text?.toString()?.toIntOrNull()?.let { p ->
+                if (p in 1..65535) vm.update { it.copy(wifiPort = p) }
             }
         }
-        etToken.setOnFocusChangeListener { _, _ ->
+
+        // Persist token on every edit.
+        etToken.doAfterTextChanged { text ->
             vm.update {
                 it.copy(
-                    wifiToken = etToken.text.toString()
-                        .takeIf { t -> t.isNotBlank() }
+                    wifiToken = text?.toString()?.takeIf { t -> t.isNotBlank() }
                 )
             }
         }
+
         cbAll.setOnCheckedChangeListener { _, c ->
             vm.update { it.copy(wifiBindAll = c) }
         }

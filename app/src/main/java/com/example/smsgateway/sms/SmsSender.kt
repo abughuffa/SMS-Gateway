@@ -11,8 +11,13 @@ import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.content.ContextCompat
+import java.util.UUID
 
-data class SendResult(val ok: Boolean, val error: String? = null)
+data class SendResult(
+    val ok: Boolean,
+    val error: String? = null,
+    val reference: String = ""
+)
 
 object SmsSender {
 
@@ -22,40 +27,67 @@ object SmsSender {
         context: Context,
         phone: String,
         message: String,
-        simSlot: Int = 0
+        simSlot: Int = 0,
+        reference: String = UUID.randomUUID().toString()
     ): SendResult {
         return try {
             val sms = smsManagerForSlot(context, simSlot)
                 ?: defaultSmsManager(context)
-                ?: return SendResult(false, "SMS manager unavailable")
+                ?: return SendResult(false, "SMS manager unavailable", reference)
 
             val parts = sms.divideMessage(message)
 
             val sentIntents = ArrayList<PendingIntent>(parts.size)
+            val deliveredIntents = ArrayList<PendingIntent>(parts.size)
+
             parts.forEachIndexed { idx, _ ->
-                sentIntents += PendingIntent.getBroadcast(
-                    context,
-                    idx,
-                    Intent("com.example.smsgateway.SMS_SENT.$idx")
-                        .setPackage(context.packageName),
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                sentIntents += statusIntent(
+                    context, SmsStatusReceiver.ACTION_SENT, reference, idx, 1000 + idx
+                )
+                deliveredIntents += statusIntent(
+                    context, SmsStatusReceiver.ACTION_DELIVERED, reference, idx, 2000 + idx
                 )
             }
 
             if (parts.size == 1) {
-                sms.sendTextMessage(phone, null, parts[0], sentIntents[0], null)
+                sms.sendTextMessage(phone, null, parts[0], sentIntents[0], deliveredIntents[0])
             } else {
-                sms.sendMultipartTextMessage(phone, null, parts, sentIntents, null)
+                sms.sendMultipartTextMessage(
+                    phone, null, parts, sentIntents, deliveredIntents
+                )
             }
-            Log.i(TAG, "SMS queued to $phone (${parts.size} part(s))")
-            SendResult(ok = true)
+            Log.i(TAG, "SMS queued to $phone (${parts.size} part(s)) ref=$reference")
+            SendResult(ok = true, reference = reference)
         } catch (t: Throwable) {
             Log.e(TAG, "send() failed", t)
-            SendResult(ok = false, error = t.message ?: t.javaClass.simpleName)
+            SendResult(
+                ok = false,
+                error = t.message ?: t.javaClass.simpleName,
+                reference = reference
+            )
         }
     }
 
-    /** Returns a per-SIM SmsManager on API 31+; falls back to the deprecated helper below 31. */
+    private fun statusIntent(
+        context: Context,
+        action: String,
+        reference: String,
+        partIndex: Int,
+        requestCode: Int
+    ): PendingIntent {
+        val intent = Intent(action)
+            .setPackage(context.packageName)
+            .putExtra(SmsStatusReceiver.EXTRA_REFERENCE, reference)
+            .putExtra(SmsStatusReceiver.EXTRA_PART_INDEX, partIndex)
+        return PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
+    /** Per-SIM SmsManager on API 31+; deprecated helper below 31. */
     private fun smsManagerForSlot(context: Context, slot: Int): SmsManager? {
         return try {
             if (ContextCompat.checkSelfPermission(

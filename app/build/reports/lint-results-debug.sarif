@@ -16,10 +16,112 @@
                     },
                     "language": "en-US",
                     "rules": [
+                        {
+                            "id": "SetTextI18n",
+                            "shortDescription": {
+                                "text": "TextView Internationalization"
+                            },
+                            "fullDescription": {
+                                "text": "When calling TextView#setText\n* Never call Number#toString() to format numbers; it will not handle fraction separators and locale-specific digits properly. Consider using String#format with proper format specifications (%d or %f) instead.\n* Do not pass a string literal (e.g. \"Hello\") to display text. Hardcoded text can not be properly translated to other languages. Consider using Android resource strings instead.\n* Do not build messages by concatenating text chunks. Such messages can not be properly translated.",
+                                "markdown": "When calling `TextView#setText`\n* Never call `Number#toString()` to format numbers; it will not handle fraction separators and locale-specific digits properly. Consider using `String#format` with proper format specifications (`%d` or `%f`) instead.\n* Do not pass a string literal (e.g. \"Hello\") to display text. Hardcoded text can not be properly translated to other languages. Consider using Android resource strings instead.\n* Do not build messages by concatenating text chunks. Such messages can not be properly translated."
+                            },
+                            "defaultConfiguration": {
+                                "level": "warning",
+                                "rank": 50
+                            },
+                            "properties": {
+                                "tags": [
+                                    "Internationalization"
+                                ]
+                            }
+                        }
                     ]
                 }
             },
+            "originalUriBaseIds": {
+                "%SRCROOT%": {
+                    "uri": "file:///home/mohammed/Projects/SmsGateway/"
+                }
+            },
             "results": [
+                {
+                    "ruleId": "SetTextI18n",
+                    "ruleIndex": 0,
+                    "message": {
+                        "text": "Do not concatenate text displayed with setText. Use resource string with placeholders.",
+                        "markdown": "Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app/src/main/java/com/example/smsgateway/MainActivity.kt"
+                                },
+                                "region": {
+                                    "startLine": 33,
+                                    "startColumn": 28,
+                                    "endLine": 34,
+                                    "endColumn": 45,
+                                    "charOffset": 1156,
+                                    "charLength": 82,
+                                    "snippet": {
+                                        "text": "getString(R.string.service_stopped) +\n                    \" — missing permissions\""
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 31,
+                                    "endLine": 37,
+                                    "snippet": {
+                                        "text": "        } else {\n            // Tell the user clearly, don't silently start a broken service.\n            tvState.text = getString(R.string.service_stopped) +\n                    \" — missing permissions\"\n        }\n    }\n"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "2db608cd47bfe426"
+                    }
+                },
+                {
+                    "ruleId": "SetTextI18n",
+                    "ruleIndex": 0,
+                    "message": {
+                        "text": "String literal in setText can not be translated. Use Android resources instead.",
+                        "markdown": "String literal in `setText` can not be translated. Use Android resources instead."
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uriBaseId": "%SRCROOT%",
+                                    "uri": "app/src/main/java/com/example/smsgateway/MainActivity.kt"
+                                },
+                                "region": {
+                                    "startLine": 34,
+                                    "startColumn": 22,
+                                    "endLine": 34,
+                                    "endColumn": 44,
+                                    "charOffset": 1215,
+                                    "charLength": 22,
+                                    "snippet": {
+                                        "text": " — missing permissions"
+                                    }
+                                },
+                                "contextRegion": {
+                                    "startLine": 32,
+                                    "endLine": 37,
+                                    "snippet": {
+                                        "text": "            // Tell the user clearly, don't silently start a broken service.\n            tvState.text = getString(R.string.service_stopped) +\n                    \" — missing permissions\"\n        }\n    }\n"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "partialFingerprints": {
+                        "sourceContext/v1": "a2c734999ff319b9"
+                    }
+                }
             ]
         }
     ]
