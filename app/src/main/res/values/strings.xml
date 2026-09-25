@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SMS Gateway</string>
+
+    <!-- Connection status lines -->
+    <string name="status_format">Status: %1$s</string>
+
+    <!-- Wi-Fi local IP list -->
+    <string name="local_ips_header">Local IPs:</string>
+    <string name="local_ips_none">(none)</string>
+
+    <!-- API example hint -->
+    <string name="api_example">API example:\nPOST http://&lt;phone-ip&gt;:8080/send\n{"to":"+123","body":"hi"}</string>
 </resources>

@@ -85,7 +85,10 @@ class BluetoothConnectionFragment : Fragment() {
 
         //vm.update { it.copy(mode = ConnectionMode.BLUETOOTH) }
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.btStatus.collect { tvStatus.text = "Status: $it" }
+            vm.btStatus.collect {
+                tvStatus.text = getString(R.string.status_format, it)
+                //tvStatus.text = "Status: $it"
+            }
         }
     }
 

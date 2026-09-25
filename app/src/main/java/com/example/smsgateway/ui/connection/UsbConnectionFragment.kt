@@ -47,13 +47,18 @@ class UsbConnectionFragment : Fragment() {
         }
 
         v.findViewById<Button>(R.id.btnUsbTest).setOnClickListener {
-            tvStatus.text = "Status: ${vm.usbStatus.value}"
+            tvStatus.text = getString(R.string.status_format, vm.usbStatus.value)
+            //tvStatus.text = "Status: ${vm.usbStatus.value}"
             Toast.makeText(requireContext(), "USB test triggered", Toast.LENGTH_SHORT).show()
         }
 
         //vm.update { it.copy(mode = ConnectionMode.USB) }
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.usbStatus.collect { tvStatus.text = "Status: $it" }
+
+            vm.usbStatus.collect {
+                tvStatus.text = getString(R.string.status_format, it)
+              //  tvStatus.text = "Status: $it"
+            }
         }
     }
 }

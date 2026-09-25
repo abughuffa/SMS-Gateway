@@ -54,9 +54,15 @@ class WifiConnectionFragment : Fragment() {
 
         fun refreshIps() {
             viewLifecycleOwner.lifecycleScope.launch {
+
                 val ips = withContext(Dispatchers.IO) { localIpv4Addresses() }
-                tvIps.text = "Local IPs:\n" +
-                    (if (ips.isEmpty()) "(none)" else ips.joinToString("\n"))
+                val body = if (ips.isEmpty()) getString(R.string.local_ips_none)
+                else ips.joinToString("\n")
+                tvIps.text = getString(R.string.local_ips_header) + "\n" + body
+
+//                val ips = withContext(Dispatchers.IO) { localIpv4Addresses() }
+//                tvIps.text = "Local IPs:\n" +
+//                    (if (ips.isEmpty()) "(none)" else ips.joinToString("\n"))
             }
         }
         refreshIps()
@@ -65,7 +71,10 @@ class WifiConnectionFragment : Fragment() {
 
         //vm.update { it.copy(mode = ConnectionMode.WIFI) }
         viewLifecycleOwner.lifecycleScope.launch {
-            vm.wifiStatus.collect { tvStatus.text = "Status: $it" }
+            vm.wifiStatus.collect {
+                tvStatus.text = getString(R.string.status_format, it)
+                //tvStatus.text = "Status: $it"
+            }
         }
     }
 
