@@ -1,7 +1,8 @@
 package com.example.smsgateway.service
 
 import android.content.Context
-import android.util.Log
+//import android.util.Log
+import com.example.smsgateway.log.Log
 import com.example.smsgateway.db.InboxDb
 import com.example.smsgateway.model.*
 import com.example.smsgateway.sms.SmsSender

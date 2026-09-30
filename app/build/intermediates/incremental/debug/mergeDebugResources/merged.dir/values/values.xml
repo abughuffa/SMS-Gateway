@@ -1978,6 +1978,7 @@
     <string name="abc_shareactionprovider_share_with_application">Share with <ns2:g example="Mail" id="application_name">%s</ns2:g></string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
     <string name="action_connection_settings">Connection Settings</string>
+    <string name="action_process_log">Process Log</string>
     <string name="action_start">Start</string>
     <string name="action_stop">Stop</string>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
@@ -2004,7 +2005,10 @@
     <string name="character_counter_overflowed_content_description">Character limit exceeded %1$d of %2$d</string>
     <string name="character_counter_pattern" translatable="false">%1$d/%2$d</string>
     <string name="clear_text_end_icon_content_description">Clear text</string>
+    <string name="connection_settings">Connection Settings</string>
     <string name="connection_type">Connection type</string>
+    <string name="d">D</string>
+    <string name="e">E</string>
     <string description="Screen reader announcement for when a checkbox is on error. [CHAR LIMIT=NONE]" name="error_a11y_label">
     Error: invalid
   </string>
@@ -2016,12 +2020,18 @@
     <string name="hint_api_key">API key (X-Api-Key header, optional)</string>
     <string name="hint_http_port">HTTP port (default 8080)</string>
     <string name="hint_usb_port">USB port</string>
+    <string name="i">I</string>
     <string description="Content description for an icon that appears in the title area of a dialog" name="icon_content_description">Dialog Icon</string>
     <string name="item_view_role_description">Tab</string>
     <string name="label_bind_all">Bind to all interfaces (0.0.0.0)</string>
     <string name="label_ip_list">Local IPs:</string>
     <string name="local_ips_block">Local IPs:\n%1$s</string>
     <string name="local_ips_none">(none)</string>
+    <string name="log_autoscroll">Auto-scroll</string>
+    <string name="log_clear">Clear</string>
+    <string name="log_filter_hint">Filter (tag or text)</string>
+    <string name="log_share">Share</string>
+    <string name="log_viewer_title">Process log</string>
     <string name="m3_exceed_max_badge_text_suffix" translatable="false"><ns2:g example="Some te" id="part of a long text">%1$s</ns2:g><ns2:g example="…" id="suffix">%2$s</ns2:g></string>
     <string name="m3_ref_typeface_brand_medium" translatable="false">sans-serif-medium</string>
     <string name="m3_ref_typeface_brand_regular" translatable="false">sans-serif</string>
@@ -2154,6 +2164,7 @@
     <string name="status_format">Status: %1$s</string>
     <string name="status_stopped">Stopped</string>
     <string name="usb_test_triggered">USB test triggered</string>
+    <string name="w">W</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>

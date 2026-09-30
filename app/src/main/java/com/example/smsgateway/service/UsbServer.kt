@@ -9,7 +9,8 @@ import android.hardware.usb.UsbAccessory
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import android.util.Log
+//import android.util.Log
+import com.example.smsgateway.log.Log
 import androidx.core.content.ContextCompat
 import com.example.smsgateway.db.InboxDb
 import com.example.smsgateway.sms.SmsSender

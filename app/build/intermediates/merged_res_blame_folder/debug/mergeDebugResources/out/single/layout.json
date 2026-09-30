@@ -4,12 +4,20 @@
         "source": "com.example.smsgateway.app-main-39:/layout/activity_connection.xml"
     },
     {
+        "merged": "com.example.smsgateway.app-mergeDebugResources-36:/layout/item_log_entry.xml",
+        "source": "com.example.smsgateway.app-main-39:/layout/item_log_entry.xml"
+    },
+    {
         "merged": "com.example.smsgateway.app-mergeDebugResources-36:/layout/fragment_wifi.xml",
         "source": "com.example.smsgateway.app-main-39:/layout/fragment_wifi.xml"
     },
     {
         "merged": "com.example.smsgateway.app-mergeDebugResources-36:/layout/fragment_usb.xml",
         "source": "com.example.smsgateway.app-main-39:/layout/fragment_usb.xml"
+    },
+    {
+        "merged": "com.example.smsgateway.app-mergeDebugResources-36:/layout/activity_log_viewer.xml",
+        "source": "com.example.smsgateway.app-main-39:/layout/activity_log_viewer.xml"
     },
     {
         "merged": "com.example.smsgateway.app-mergeDebugResources-36:/layout/activity_main.xml",

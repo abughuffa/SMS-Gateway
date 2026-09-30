@@ -48,6 +48,10 @@
         <activity
             android:name=".ui.connection.ConnectionActivity"
             android:exported="false" />
+        <activity
+            android:name=".log.LogViewerActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
 
         <service
             android:name=".service.GatewayService"

@@ -24,6 +24,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final Button btnConnection;
 
   @NonNull
+  public final Button btnProcessLog;
+
+  @NonNull
   public final Button btnStart;
 
   @NonNull
@@ -36,10 +39,11 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextView tvState;
 
   private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button btnConnection,
-      @NonNull Button btnStart, @NonNull Button btnStop, @NonNull LinearLayout root,
-      @NonNull TextView tvState) {
+      @NonNull Button btnProcessLog, @NonNull Button btnStart, @NonNull Button btnStop,
+      @NonNull LinearLayout root, @NonNull TextView tvState) {
     this.rootView = rootView;
     this.btnConnection = btnConnection;
+    this.btnProcessLog = btnProcessLog;
     this.btnStart = btnStart;
     this.btnStop = btnStop;
     this.root = root;
@@ -79,6 +83,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btnProcessLog;
+      Button btnProcessLog = ViewBindings.findChildViewById(rootView, id);
+      if (btnProcessLog == null) {
+        break missingId;
+      }
+
       id = R.id.btnStart;
       Button btnStart = ViewBindings.findChildViewById(rootView, id);
       if (btnStart == null) {
@@ -99,8 +109,8 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, btnConnection, btnStart, btnStop,
-          root, tvState);
+      return new ActivityMainBinding((LinearLayout) rootView, btnConnection, btnProcessLog,
+          btnStart, btnStop, root, tvState);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -70,6 +70,10 @@
         <activity
             android:name="com.example.smsgateway.ui.connection.ConnectionActivity"
             android:exported="false" />
+        <activity
+            android:name="com.example.smsgateway.log.LogViewerActivity"
+            android:exported="false"
+            android:parentActivityName="com.example.smsgateway.MainActivity" />
 
         <service
             android:name="com.example.smsgateway.service.GatewayService"

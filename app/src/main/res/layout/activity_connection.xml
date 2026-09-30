@@ -7,7 +7,15 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/connection_settings"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
     <com.google.android.material.textfield.TextInputLayout
+        android:paddingTop="5dp"
         android:id="@+id/tilConnectionType"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"

@@ -8,6 +8,10 @@
         "source": "com.example.smsgateway.app-main-39:/xml/accessory_filter.xml"
     },
     {
+        "merged": "com.example.smsgateway.app-debug-37:/layout_item_log_entry.xml.flat",
+        "source": "com.example.smsgateway.app-main-39:/layout/item_log_entry.xml"
+    },
+    {
         "merged": "com.example.smsgateway.app-debug-37:/layout_activity_connection.xml.flat",
         "source": "com.example.smsgateway.app-main-39:/layout/activity_connection.xml"
     },
@@ -58,6 +62,10 @@
     {
         "merged": "com.example.smsgateway.app-debug-37:/mipmap-mdpi_ic_launcher_round.webp.flat",
         "source": "com.example.smsgateway.app-main-39:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.smsgateway.app-debug-37:/layout_activity_log_viewer.xml.flat",
+        "source": "com.example.smsgateway.app-main-39:/layout/activity_log_viewer.xml"
     },
     {
         "merged": "com.example.smsgateway.app-debug-37:/mipmap-xhdpi_ic_launcher.webp.flat",

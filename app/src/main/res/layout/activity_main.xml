@@ -40,4 +40,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/action_connection_settings" />
+
+    <Button
+        android:id="@+id/btnProcessLog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/action_process_log" />
 </LinearLayout>

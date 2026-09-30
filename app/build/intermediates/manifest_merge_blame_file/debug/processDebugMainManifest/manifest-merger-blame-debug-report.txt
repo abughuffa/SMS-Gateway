@@ -74,7 +74,7 @@
 41-->[androidx.core:core:1.15.0] /home/mohammed/.gradle/caches/9.8.0/transforms/16329e0218c11bbdf94b45a17e48d049/transformed/core-1.15.0/AndroidManifest.xml:26:22-94
 42
 43    <application
-43-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:24:5-81:19
+43-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:24:5-85:19
 44        android:allowBackup="true"
 44-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:25:9-35
 45        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -130,126 +130,134 @@
 71-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:49:13-61
 72            android:exported="false" />
 72-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:50:13-37
-73
-74        <service
-74-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:52:9-60:19
-75            android:name="com.example.smsgateway.service.GatewayService"
-75-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:53:13-51
-76            android:enabled="true"
-76-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:54:13-35
-77            android:exported="false"
-77-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:55:13-37
-78            android:foregroundServiceType="specialUse" >
-78-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:56:13-55
-79            <property
-79-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:57:13-59:54
-80                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-80-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:58:17-76
-81                android:value="SMS gateway server" />
-81-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:59:17-51
-82        </service>
-83
-84        <!-- Inbound SMS (system-broadcast, protected by BROADCAST_SMS) -->
-85        <receiver
-85-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:63:9-70:20
-86            android:name="com.example.smsgateway.sms.SmsReceiver"
-86-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:64:13-44
-87            android:exported="true"
-87-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:65:13-36
-88            android:permission="android.permission.BROADCAST_SMS" >
-88-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:66:13-66
-89            <intent-filter android:priority="999" >
-89-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:67:13-69:29
-89-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:67:28-50
-90                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-90-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:68:17-82
-90-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:68:25-79
-91            </intent-filter>
-92        </receiver>
-93
-94        <!-- Outbound SMS status (delivery reports from telephony) -->
-95        <receiver
-95-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:73:9-80:20
-96            android:name="com.example.smsgateway.sms.SmsStatusReceiver"
-96-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:74:13-50
-97            android:exported="false" >
-97-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:75:13-37
-98            <intent-filter>
-98-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:76:13-79:29
-99                <action android:name="com.example.smsgateway.SMS_SENT" />
-99-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:77:17-74
-99-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:77:25-71
-100                <action android:name="com.example.smsgateway.SMS_DELIVERED" />
-100-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:78:17-79
-100-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:78:25-76
-101            </intent-filter>
-102        </receiver>
-103
-104        <provider
-104-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
-105            android:name="androidx.startup.InitializationProvider"
-105-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
-106            android:authorities="com.example.smsgateway.androidx-startup"
-106-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
-107            android:exported="false" >
-107-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
-108            <meta-data
-108-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
-109                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-109-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
-110                android:value="androidx.startup" />
-110-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
-111            <meta-data
-111-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/mohammed/.gradle/caches/9.8.0/transforms/faae6d4b1948157afa9b7b96da17e96a/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:29:13-31:52
-112                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-112-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/mohammed/.gradle/caches/9.8.0/transforms/faae6d4b1948157afa9b7b96da17e96a/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:30:17-78
-113                android:value="androidx.startup" />
-113-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/mohammed/.gradle/caches/9.8.0/transforms/faae6d4b1948157afa9b7b96da17e96a/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:31:17-49
-114            <meta-data
-114-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
-115                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-115-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
-116                android:value="androidx.startup" />
-116-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
-117        </provider>
-118
-119        <receiver
-119-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
-120            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-120-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
-121            android:directBootAware="false"
-121-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
-122            android:enabled="true"
-122-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
-123            android:exported="true"
-123-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
-124            android:permission="android.permission.DUMP" >
-124-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
-125            <intent-filter>
-125-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
-126                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-126-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
-126-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
-127            </intent-filter>
-128            <intent-filter>
-128-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
-129                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-129-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
-129-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
-130            </intent-filter>
-131            <intent-filter>
-131-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
-132                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-132-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
-132-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
-133            </intent-filter>
-134            <intent-filter>
-134-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
-135                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-135-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
-135-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
-136            </intent-filter>
-137        </receiver>
-138    </application>
-139
-140</manifest>
+73        <activity
+73-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:51:9-54:58
+74            android:name="com.example.smsgateway.log.LogViewerActivity"
+74-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:52:13-50
+75            android:exported="false"
+75-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:53:13-37
+76            android:parentActivityName="com.example.smsgateway.MainActivity" />
+76-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:54:13-55
+77
+78        <service
+78-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:56:9-64:19
+79            android:name="com.example.smsgateway.service.GatewayService"
+79-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:57:13-51
+80            android:enabled="true"
+80-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:58:13-35
+81            android:exported="false"
+81-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:59:13-37
+82            android:foregroundServiceType="specialUse" >
+82-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:60:13-55
+83            <property
+83-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:61:13-63:54
+84                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+84-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:62:17-76
+85                android:value="SMS gateway server" />
+85-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:63:17-51
+86        </service>
+87
+88        <!-- Inbound SMS (system-broadcast, protected by BROADCAST_SMS) -->
+89        <receiver
+89-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:67:9-74:20
+90            android:name="com.example.smsgateway.sms.SmsReceiver"
+90-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:68:13-44
+91            android:exported="true"
+91-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:69:13-36
+92            android:permission="android.permission.BROADCAST_SMS" >
+92-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:70:13-66
+93            <intent-filter android:priority="999" >
+93-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:71:13-73:29
+93-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:71:28-50
+94                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+94-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:72:17-82
+94-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:72:25-79
+95            </intent-filter>
+96        </receiver>
+97
+98        <!-- Outbound SMS status (delivery reports from telephony) -->
+99        <receiver
+99-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:77:9-84:20
+100            android:name="com.example.smsgateway.sms.SmsStatusReceiver"
+100-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:78:13-50
+101            android:exported="false" >
+101-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:79:13-37
+102            <intent-filter>
+102-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:80:13-83:29
+103                <action android:name="com.example.smsgateway.SMS_SENT" />
+103-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:81:17-74
+103-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:81:25-71
+104                <action android:name="com.example.smsgateway.SMS_DELIVERED" />
+104-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:82:17-79
+104-->/home/mohammed/Projects/SmsGateway/app/src/main/AndroidManifest.xml:82:25-76
+105            </intent-filter>
+106        </receiver>
+107
+108        <provider
+108-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+109            android:name="androidx.startup.InitializationProvider"
+109-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+110            android:authorities="com.example.smsgateway.androidx-startup"
+110-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+111            android:exported="false" >
+111-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+112            <meta-data
+112-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+113                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+113-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+114                android:value="androidx.startup" />
+114-->[androidx.emoji2:emoji2:1.3.0] /home/mohammed/.gradle/caches/9.8.0/transforms/207b6df027f78f6982daa768c30de41c/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+115            <meta-data
+115-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/mohammed/.gradle/caches/9.8.0/transforms/faae6d4b1948157afa9b7b96da17e96a/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:29:13-31:52
+116                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+116-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/mohammed/.gradle/caches/9.8.0/transforms/faae6d4b1948157afa9b7b96da17e96a/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:30:17-78
+117                android:value="androidx.startup" />
+117-->[androidx.lifecycle:lifecycle-process:2.8.7] /home/mohammed/.gradle/caches/9.8.0/transforms/faae6d4b1948157afa9b7b96da17e96a/transformed/lifecycle-process-2.8.7/AndroidManifest.xml:31:17-49
+118            <meta-data
+118-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+119                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+119-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+120                android:value="androidx.startup" />
+120-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+121        </provider>
+122
+123        <receiver
+123-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+124            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+124-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+125            android:directBootAware="false"
+125-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+126            android:enabled="true"
+126-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+127            android:exported="true"
+127-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+128            android:permission="android.permission.DUMP" >
+128-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+129            <intent-filter>
+129-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+130                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+130-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+130-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+131            </intent-filter>
+132            <intent-filter>
+132-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+133                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+133-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+133-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+134            </intent-filter>
+135            <intent-filter>
+135-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+136                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+136-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+136-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+137            </intent-filter>
+138            <intent-filter>
+138-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+139                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+139-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+139-->[androidx.profileinstaller:profileinstaller:1.4.0] /home/mohammed/.gradle/caches/9.8.0/transforms/274b8bd620f46104d4303c90b4ae3af2/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+140            </intent-filter>
+141        </receiver>
+142    </application>
+143
+144</manifest>

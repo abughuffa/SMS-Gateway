@@ -17,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.example.smsgateway.service.GatewayService
 import com.example.smsgateway.ui.connection.ConnectionActivity
+import com.example.smsgateway.log.LogViewerActivity
+import com.example.smsgateway.log.LogBuffer
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
                     " — missing permissions"
         }
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -69,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnConnection).setOnClickListener {
             startActivity(Intent(this, ConnectionActivity::class.java))
         }
+
+        findViewById<Button>(R.id.btnProcessLog).setOnClickListener {
+            startActivity(Intent(this, LogViewerActivity::class.java))
+        }
+
+        LogBuffer.i("App", "SMS Gateway started, pid=${android.os.Process.myPid()}")
     }
 
     private fun startGatewayService() {
@@ -77,6 +86,8 @@ class MainActivity : AppCompatActivity() {
             Intent(this, GatewayService::class.java)
         )
         tvState.text = getString(R.string.service_starting)
+
+        LogBuffer.i("Main", "Starting GatewayService")
     }
 
     /**
@@ -109,5 +120,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             permLauncher.launch(needed.toTypedArray())
         }
+
+        LogBuffer.i("Main", "Requesting ${needed.size} permissions: ${needed.joinToString { it.substringAfterLast('.') }}")
     }
+
+
 }

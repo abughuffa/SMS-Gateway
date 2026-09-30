@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import com.example.smsgateway.log.LogBuffer
 
 class GatewayService : Service() {
 
@@ -41,10 +42,15 @@ class GatewayService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+
+        val cfg = ConnectionPrefs.load(this@GatewayService)
+        //Log.i("Gateway", "onStartCommand, mode=${cfg.mode}")
+        LogBuffer.i("Gateway", "onStartCommand, mode=${cfg.mode}")
+
         startForeground(
             NOTIF_ID,
-            buildNotification(getString(R.string.service_starting))
-        )
+            buildNotification(getString(R.string.service_starting)))
 
         // Serialize server start behind any in-flight teardown so a rapid
         // Stop → Start sequence cannot race.

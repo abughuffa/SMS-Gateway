@@ -16,6 +16,8 @@
     <string name="notif_channel_name">SMS Gateway</string>
 
     <!-- Connection screen -->
+
+    <string name="connection_settings">Connection Settings</string>
     <string name="connection_type">Connection type</string>
     <string name="save_and_apply">Save &amp; Apply</string>
     <string name="cancel">Cancel</string>
@@ -41,4 +43,17 @@
     <string name="rb_accessory">Accessory</string>
     <string name="btn_usb_test">Test USB</string>
     <string name="usb_test_triggered">USB test triggered</string>
+
+    <!-- Log fragment -->
+    <string name="d">D</string>
+    <string name="i">I</string>
+    <string name="w">W</string>
+    <string name="e">E</string>
+
+    <string name="log_viewer_title">Process log</string>
+    <string name="log_filter_hint">Filter (tag or text)</string>
+    <string name="log_autoscroll">Auto-scroll</string>
+    <string name="log_share">Share</string>
+    <string name="log_clear">Clear</string>
+    <string name="action_process_log">Process Log</string>
 </resources>

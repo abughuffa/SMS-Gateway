@@ -4,7 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
-import android.util.Log
+//import android.util.Log
+import com.example.smsgateway.log.Log
 import com.example.smsgateway.db.InboxDb
 import com.example.smsgateway.service.WebhookDispatcher
 
