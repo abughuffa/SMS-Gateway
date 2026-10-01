@@ -7,97 +7,140 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.smsgateway.MainActivity
 import com.example.smsgateway.R
+import com.example.smsgateway.log.LogBuffer
+import com.example.smsgateway.ui.connection.ConnectionConfig
 import com.example.smsgateway.ui.connection.ConnectionMode
 import com.example.smsgateway.ui.connection.ConnectionPrefs
+import com.example.smsgateway.ui.connection.UsbMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import com.example.smsgateway.log.LogBuffer
 
-class GatewayService : Service() {
+class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    // Scope used for (re)start and teardown so we never block the main thread.
-    private val workScope =
-        CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val workScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     companion object {
         private const val CHANNEL_ID = "gateway"
         private const val NOTIF_ID = 1
     }
 
+    private var lastConfig: ConnectionConfig = ConnectionConfig()
+
     override fun onCreate() {
         super.onCreate()
-
-       // System.setProperty("jansi.disable", "true")
         createNotificationChannel()
-        // SmsReceiver is registered statically in AndroidManifest.xml with
-        // android:permission="android.permission.BROADCAST_SMS". Do NOT
-        // register it dynamically here — that would create a second,
-        // unpermissioned receiver that any app could spoof.
+
+        val prefs = getSharedPreferences("connection_prefs", Context.MODE_PRIVATE)
+        prefs.registerOnSharedPreferenceChangeListener(this)
+
+        lastConfig = ConnectionPrefs.load(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val cfg = ConnectionPrefs.load(this)
+        lastConfig = cfg
 
-
-        val cfg = ConnectionPrefs.load(this@GatewayService)
-        //Log.i("Gateway", "onStartCommand, mode=${cfg.mode}")
         LogBuffer.i("Gateway", "onStartCommand, mode=${cfg.mode}")
 
         startForeground(
             NOTIF_ID,
-            buildNotification(getString(R.string.service_starting)))
+            buildNotification(getString(R.string.service_starting))
+        )
 
-        // Serialize server start behind any in-flight teardown so a rapid
-        // Stop → Start sequence cannot race.
         workScope.launch {
-            try { WifiServer.stop() } catch (_: Throwable) {}
-            try { UsbServer.stop() } catch (_: Throwable) {}
-
-            val cfg = ConnectionPrefs.load(this@GatewayService)
-            when (cfg.mode) {
-                ConnectionMode.WIFI -> {
-                    WifiServer.configure(
-                        context = this@GatewayService,
-                        token = cfg.wifiToken,
-                        modeLabel = "WIFI"
-                    ) { updateNotification(it) }
-                    WifiServer.start(cfg.wifiPort, cfg.wifiBindAll)
-                    updateNotification(WifiServer.status())
-                }
-                ConnectionMode.USB -> {
-                    UsbServer.configure(this@GatewayService) { updateNotification("USB: $it") }
-                    UsbServer.start(
-                        mode = cfg.usbMode,
-                        usbPort = cfg.usbPort,
-                        wifiPort = cfg.wifiPort
-                    )
-                    updateNotification(UsbServer.status())
-                }
-                ConnectionMode.NONE ->
-                    updateNotification(getString(R.string.service_no_mode))
-            }
+            startGatewayWithConfig(cfg)
         }
+
         return START_STICKY
     }
 
-    override fun onDestroy() {
-        // Never block the main thread waiting on Ktor shutdown.
-        workScope.launch {
-            try { WifiServer.stop() } catch (_: Throwable) {}
-            try { UsbServer.stop() } catch (_: Throwable) {}
-            try { UsbServer.shutdown() } catch (_: Throwable) {}
+    override fun onSharedPreferenceChanged(prefs: SharedPreferences?, key: String?) {
+        if (prefs == null) return
+
+        val newConfig = ConnectionPrefs.load(this)
+        if (newConfig != lastConfig) {
+            LogBuffer.i("GatewayService", "Settings changed, restarting gateway")
+            restartGateway(newConfig)
+            lastConfig = newConfig
         }
+    }
+
+    private fun restartGateway(cfg: ConnectionConfig) {
+        workScope.launch {
+            try {
+                startGatewayWithConfig(cfg)
+            } catch (e: Exception) {
+                LogBuffer.e("GatewayService", "Error restarting gateway: ${e.message}", e)
+                updateNotification("Error: ${e.message}")
+            }
+        }
+    }
+
+    private fun startGatewayWithConfig(cfg: ConnectionConfig) {
+        try { GatewayServer.stop() } catch (_: Throwable) {}
+
+        when (cfg.mode) {
+            ConnectionMode.WIFI -> {
+                GatewayServer.configure(
+                    context = this@GatewayService,
+                    onStatus = { updateNotification(it) }
+                )
+                GatewayServer.start(
+                    mode = GatewayServer.ConnectionMode.WIFI,
+                    port = cfg.wifiPort,
+                    apiToken = cfg.wifiToken,
+                    bindAll = cfg.wifiBindAll
+                )
+                updateNotification(GatewayServer.status())
+            }
+
+            ConnectionMode.USB -> {
+                GatewayServer.configure(
+                    context = this@GatewayService,
+                    onStatus = { updateNotification("USB: $it") }
+                )
+
+                val usbMode = when (cfg.usbMode) {
+                    UsbMode.ADB_FORWARD -> GatewayServer.ConnectionMode.USB_ADB
+                    UsbMode.ACCESSORY -> GatewayServer.ConnectionMode.USB_ACCESSORY
+                }
+
+                GatewayServer.start(
+                    mode = usbMode,
+                    port = cfg.usbPort,
+                    apiToken = null,
+                    bindAll = false
+                )
+
+                updateNotification(GatewayServer.status())
+            }
+
+            ConnectionMode.NONE -> {
+                updateNotification(getString(R.string.service_no_mode))
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        val prefs = getSharedPreferences("connection_prefs", Context.MODE_PRIVATE)
+        prefs.unregisterOnSharedPreferenceChangeListener(this)
+
+        workScope.launch {
+            try { GatewayServer.stop() } catch (_: Throwable) {}
+            try { GatewayServer.shutdown() } catch (_: Throwable) {}
+        }
+
         super.onDestroy()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-
-    // ---- Notification helpers -------------------------------------------------
 
     private fun createNotificationChannel() {
         val mgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
