@@ -9,12 +9,33 @@ import android.hardware.usb.UsbAccessory
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.ParcelFileDescriptor
-//import android.util.Log
-import com.example.smsgateway.log.Log
 import androidx.core.content.ContextCompat
 import com.example.smsgateway.db.InboxDb
+import com.example.smsgateway.log.Log
+import com.example.smsgateway.model.ErrorResponse
+import com.example.smsgateway.model.InboxResponse
+import com.example.smsgateway.model.SendRequest
+import com.example.smsgateway.model.SendResponse
+import com.example.smsgateway.model.StatusResponse
+import com.example.smsgateway.model.WebhookRequest
 import com.example.smsgateway.sms.SmsSender
-import com.example.smsgateway.ui.connection.UsbMode
+import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationCallPipeline
+import io.ktor.server.application.install
+import io.ktor.server.cio.CIO
+import io.ktor.server.engine.EmbeddedServer
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.plugins.calllogging.CallLogging
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.routing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,6 +44,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.add
@@ -35,10 +57,11 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
+import java.util.UUID
 
-object UsbServer {
+object GatewayServer {
 
-    private const val TAG = "UsbServer"
+    private const val TAG = "GatewayServer"
     private const val ACTION_USB_PERMISSION = "com.example.smsgateway.USB_PERMISSION"
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -48,13 +71,23 @@ object UsbServer {
     @Volatile private var db: InboxDb? = null
     @Volatile private var statusListener: ((String) -> Unit)? = null
     @Volatile private var lastStatus: String = "Disconnected"
-
     @Volatile private var running = false
-    @Volatile private var currentMode: UsbMode? = null
+    @Volatile private var modeLabel: String = "Gateway"
+    @Volatile private var apiKey: String? = null
+
+    @Volatile private var httpServer: EmbeddedServer<*, *>? = null
+    @Volatile private var serverStartedAt: Long = 0L
+    @Volatile private var currentMode: ConnectionMode? = null
 
     @Volatile private var accessoryFd: ParcelFileDescriptor? = null
-    @Volatile private var ioJob: Job? = null
+    @Volatile private var usbIoJob: Job? = null
     @Volatile private var permissionReceiver: BroadcastReceiver? = null
+
+    enum class ConnectionMode {
+        WIFI,
+        USB_ADB,
+        USB_ACCESSORY
+    }
 
     fun configure(context: Context, onStatus: (String) -> Unit) {
         val ctx = context.applicationContext
@@ -62,62 +95,49 @@ object UsbServer {
         db = InboxDb.get(ctx)
         statusListener = onStatus
         registerPermissionReceiver(ctx)
+        Log.i(TAG, "Configured")
     }
 
     fun isRunning(): Boolean = running
     fun status(): String = lastStatus
 
-    fun start(mode: UsbMode, usbPort: Int, wifiPort: Int) {
+    fun start(mode: ConnectionMode, port: Int, apiToken: String? = null, bindAll: Boolean = false) {
         if (running) {
             Log.w(TAG, "start() ignored — already running")
             return
         }
+
         val ctx = appContext ?: run {
             setStatus("Error: not configured")
             return
         }
 
-        currentMode = mode
         running = true
+        apiKey = apiToken?.takeIf { it.isNotBlank() }
 
         when (mode) {
-            UsbMode.ADB_FORWARD -> startAdbForward(ctx, usbPort, wifiPort)
-            UsbMode.ACCESSORY -> startAccessory(ctx)
+            ConnectionMode.WIFI -> startWifi(ctx, port, bindAll)
+            ConnectionMode.USB_ADB -> startUsbAdb(ctx, port)
+            ConnectionMode.USB_ACCESSORY -> startUsbAccessory(ctx)
         }
     }
 
-    /**
-     * Stops the USB session. Idempotent and never blocks the caller.
-     * Does NOT cancel the object scope — call [shutdown] for that.
-     */
     fun stop() {
         val wasRunning = running
-        val modeBefore = currentMode
         running = false
 
-        ioJob?.cancel()
-        ioJob = null
-
-        try { accessoryFd?.close() } catch (_: Throwable) {}
-        accessoryFd = null
-
-        if (wasRunning && modeBefore == UsbMode.ADB_FORWARD) {
-            // Fire-and-forget; WifiServer.stop() is suspend/IO-safe.
-            scope.launch {
-                try { WifiServer.stop() } catch (_: Throwable) {}
-            }
-        }
+        stopHttpServer()
+        stopUsbAccessory()
+        usbIoJob?.cancel()
+        usbIoJob = null
 
         currentMode = null
         setStatus("Disconnected")
-        Log.i(TAG, "USB stopped")
+        if (wasRunning) {
+            Log.i(TAG, "Gateway stopped")
+        }
     }
 
-    /**
-     * Fully tears down the object: unregisters the broadcast receiver
-     * and cancels the shared coroutine scope. After this, [configure]
-     * must be called again before [start].
-     */
     fun shutdown() {
         stop()
         permissionReceiver?.let {
@@ -126,27 +146,169 @@ object UsbServer {
         permissionReceiver = null
         statusListener = null
         scope.cancel()
-        Log.i(TAG, "UsbServer shut down")
+        Log.i(TAG, "Gateway shut down")
     }
 
-    private fun startAdbForward(ctx: Context, usbPort: Int, wifiPort: Int) {
+    private fun startWifi(ctx: Context, port: Int, bindAll: Boolean) {
+        modeLabel = "WIFI"
+        val host = if (bindAll) "0.0.0.0" else "127.0.0.1"
+
         try {
-            WifiServer.configure(
-                context = ctx,
-                token = null,
-                modeLabel = "USB_ADB"
-            ) { s -> setStatus("ADB: $s") }
-            WifiServer.start(port = wifiPort, bindAll = false)
-            setStatus("Ready. On PC run: adb forward tcp:$usbPort tcp:$wifiPort")
-            Log.i(TAG, "ADB_FORWARD active on 127.0.0.1:$wifiPort (host port $usbPort)")
+            val s = embeddedServer(
+                factory = CIO,
+                port = port,
+                host = host,
+                module = { httpModule() }
+            ).start(wait = false)
+
+            httpServer = s
+            serverStartedAt = System.currentTimeMillis()
+            setStatus("Listening on $host:$port")
+            Log.i(TAG, "HTTP server started on $host:$port")
         } catch (t: Throwable) {
-            Log.e(TAG, "ADB_FORWARD start failed", t)
+            Log.e(TAG, "Failed to start HTTP server", t)
             setStatus("Error: ${t.message}")
             running = false
         }
     }
 
-    private fun startAccessory(ctx: Context) {
+    private fun startUsbAdb(ctx: Context, port: Int) {
+        try {
+            modeLabel = "USB_ADB"
+            val host = "127.0.0.1"
+            val s = embeddedServer(
+                factory = CIO,
+                port = port,
+                host = host,
+                module = { httpModule() }
+            ).start(wait = false)
+
+            httpServer = s
+            serverStartedAt = System.currentTimeMillis()
+            setStatus("Ready. On PC run: adb forward tcp:$port tcp:$port")
+            Log.i(TAG, "USB ADB active on $host:$port")
+        } catch (t: Throwable) {
+            Log.e(TAG, "USB ADB start failed", t)
+            setStatus("Error: ${t.message}")
+            running = false
+        }
+    }
+
+    private fun stopHttpServer() {
+        val s = httpServer ?: return
+        httpServer = null
+        serverStartedAt = 0L
+
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    s.stop(500, 1000)
+                } catch (t: Throwable) {
+                    Log.w(TAG, "Stop error", t)
+                }
+            }
+        }
+    }
+
+    private fun Application.httpModule() {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                prettyPrint = false
+            })
+        }
+        install(CallLogging)
+        install(StatusPages) {
+            exception<Throwable> { call, cause ->
+                Log.e(TAG, "Unhandled error", cause)
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    ErrorResponse("internal_error", cause.message)
+                )
+            }
+        }
+
+        routing {
+            get("/status") {
+                call.respond(buildHttpStatus())
+            }
+
+            post("/send") {
+                val req = call.receive<SendRequest>()
+                if (req.to.isBlank() || req.body.isBlank()) {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse("bad_request", "'to' and 'body' are required")
+                    )
+                    return@post
+                }
+
+                val ref = req.reference ?: UUID.randomUUID().toString()
+                val result = withContext(Dispatchers.IO) {
+                    SmsSender.send(
+                        context = appContext!!,
+                        phone = req.to,
+                        message = req.body,
+                        simSlot = req.simSlot ?: 0,
+                        reference = ref
+                    )
+                }
+
+                if (result.ok) db?.incr("stat.sent")
+                call.respond(
+                    if (result.ok) HttpStatusCode.Accepted else HttpStatusCode.BadGateway,
+                    SendResponse(
+                        id = ref,
+                        status = if (result.ok) "queued" else "failed",
+                        reference = req.reference,
+                        error = result.error
+                    )
+                )
+            }
+
+            get("/inbox") {
+                val since = call.request.queryParameters["since"]?.toLongOrNull() ?: 0L
+                val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 200
+                val list = withContext(Dispatchers.IO) { db?.since(since, limit) ?: emptyList() }
+                call.respond(InboxResponse(list))
+            }
+
+            post("/webhook") {
+                val req = call.receive<WebhookRequest>()
+                if (req.url.isBlank()) {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse("bad_request", "'url' is required")
+                    )
+                    return@post
+                }
+
+                db?.setMeta("webhook.url", req.url)
+                db?.setMeta("webhook.secret", req.secret)
+                call.respond(HttpStatusCode.OK, mapOf("ok" to true))
+            }
+
+            delete("/webhook") {
+                db?.setMeta("webhook.url", null)
+                db?.setMeta("webhook.secret", null)
+                call.respond(HttpStatusCode.OK, mapOf("ok" to true))
+            }
+        }
+    }
+    private fun buildHttpStatus(): StatusResponse {
+        val uptimeSec = if (serverStartedAt == 0L) 0L
+        else (System.currentTimeMillis() - serverStartedAt) / 1000
+
+        return StatusResponse(
+            mode = modeLabel,
+            uptimeSec = uptimeSec,
+            simReady = SmsSender.isSimReady(appContext!!),
+            sentCount = db?.getMeta("stat.sent")?.toIntOrNull() ?: 0,
+            receivedCount = db?.count() ?: 0
+        )
+    }
+
+    private fun startUsbAccessory(ctx: Context) {
         val usbManager = ctx.getSystemService(Context.USB_SERVICE) as UsbManager
         val accessory: UsbAccessory? = usbManager.accessoryList?.firstOrNull()
 
@@ -161,6 +323,7 @@ object UsbServer {
             val flags = PendingIntent.FLAG_UPDATE_CURRENT or
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                         PendingIntent.FLAG_MUTABLE else 0
+
             val pi = PendingIntent.getBroadcast(
                 ctx, 0,
                 Intent(ACTION_USB_PERMISSION).setPackage(ctx.packageName),
@@ -173,11 +336,7 @@ object UsbServer {
         openAccessory(ctx, usbManager, accessory)
     }
 
-    private fun openAccessory(
-        ctx: Context,
-        usbManager: UsbManager,
-        accessory: UsbAccessory
-    ) {
+    private fun openAccessory(ctx: Context, usbManager: UsbManager, accessory: UsbAccessory) {
         val fd = try {
             usbManager.openAccessory(accessory)
         } catch (t: Throwable) {
@@ -191,10 +350,11 @@ object UsbServer {
             return
         }
 
+        modeLabel = "USB_ACCESSORY"
         accessoryFd = fd
         setStatus("Accessory connected: ${accessory.model ?: accessory.manufacturer ?: "unknown"}")
 
-        ioJob = scope.launch { serveAccessory(fd) }
+        usbIoJob = scope.launch { serveAccessory(fd) }
     }
 
     private suspend fun serveAccessory(fd: ParcelFileDescriptor) {
@@ -207,7 +367,7 @@ object UsbServer {
             while (running && currentCoroutineContext().isActive) {
                 val line = reader.readLine() ?: break
                 if (line.isBlank()) continue
-                val response = processCommand(line)
+                val response = processAccessoryCommand(line)
                 writer.write(response)
                 writer.write("\n")
                 writer.flush()
@@ -226,20 +386,22 @@ object UsbServer {
         }
     }
 
+    private fun stopUsbAccessory() {
+        try { accessoryFd?.close() } catch (_: Throwable) {}
+        accessoryFd = null
+    }
+
     private fun registerPermissionReceiver(ctx: Context) {
         if (permissionReceiver != null) return
 
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(c: Context, intent: Intent) {
                 if (intent.action != ACTION_USB_PERMISSION) return
-                val granted = intent.getBooleanExtra(
-                    UsbManager.EXTRA_PERMISSION_GRANTED, false
-                )
+
+                val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
                 val accessory: UsbAccessory? =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                        intent.getParcelableExtra(
-                            UsbManager.EXTRA_ACCESSORY, UsbAccessory::class.java
-                        )
+                        intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY, UsbAccessory::class.java)
                     else
                         @Suppress("DEPRECATION")
                         intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY)
@@ -249,6 +411,7 @@ object UsbServer {
                     running = false
                     return
                 }
+
                 val mgr = c.getSystemService(Context.USB_SERVICE) as UsbManager
                 openAccessory(c, mgr, accessory)
             }
@@ -263,7 +426,7 @@ object UsbServer {
         permissionReceiver = receiver
     }
 
-    private fun processCommand(line: String): String {
+    private fun processAccessoryCommand(line: String): String {
         val database = db ?: return """{"error":"db_unavailable"}"""
         val ctx = appContext ?: return """{"error":"context_unavailable"}"""
 
@@ -273,7 +436,7 @@ object UsbServer {
 
             when (cmd) {
                 "status" -> buildJsonObject {
-                    put("mode", "USB")
+                    put("mode", "USB_ACCESSORY")
                     put("simReady", SmsSender.isSimReady(ctx))
                     put("receivedCount", database.count())
                     put("sentCount", database.getMeta("stat.sent")?.toIntOrNull() ?: 0)
@@ -283,8 +446,7 @@ object UsbServer {
                     val to = obj["to"]?.toString()?.trim('"') ?: ""
                     val body = obj["body"]?.toString()?.trim('"') ?: ""
                     val slot = obj["simSlot"]?.toString()?.toIntOrNull() ?: 0
-                    val ref = obj["reference"]?.toString()?.trim('"')
-                        ?: java.util.UUID.randomUUID().toString()
+                    val ref = obj["reference"]?.toString()?.trim('"') ?: UUID.randomUUID().toString()
 
                     if (to.isBlank() || body.isBlank()) {
                         buildJsonObject {
@@ -306,7 +468,6 @@ object UsbServer {
                     val since = obj["since"]?.toString()?.toLongOrNull() ?: 0L
                     val limit = obj["limit"]?.toString()?.toIntOrNull() ?: 200
                     val list = database.since(since, limit)
-                    // Proper JSON array, not a JSON-in-string.
                     buildJsonObject {
                         put("count", list.size)
                         put("messages", buildJsonArray {
@@ -321,6 +482,7 @@ object UsbServer {
                         })
                     }.toString()
                 }
+
                 else -> """{"error":"unknown command"}"""
             }
         } catch (t: Throwable) {
