@@ -701,6 +701,11 @@
     <color name="highlighted_text_material_dark">#6680cbc4</color>
     <color name="highlighted_text_material_light">#66009688</color>
     <color name="ic_launcher_background">#1976D2</color>
+    <color name="level_active_bg">#6200EE</color>
+    <color name="level_active_text">#FFFFFFFF</color>
+    <color name="level_inactive_bg">#00000000</color>
+    <color name="level_inactive_stroke">#6200EE</color>
+    <color name="level_inactive_text">#6200EE</color>
     <color name="m3_ref_palette_black">#ff000000</color>
     <color name="m3_ref_palette_error0">#ff000000</color>
     <color name="m3_ref_palette_error10">#ff410e0b</color>

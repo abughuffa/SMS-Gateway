@@ -1,5 +1,10 @@
 com.example.smsgateway
 color ic_launcher_background
+color level_active_bg
+color level_active_text
+color level_inactive_bg
+color level_inactive_stroke
+color level_inactive_text
 drawable ic_launcher_foreground
 drawable ic_stat_gateway
 id actConnectionType

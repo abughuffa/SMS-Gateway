@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#1976D2</color>
+    <color name="level_active_bg">#6200EE</color>
+    <color name="level_active_text">#FFFFFFFF</color>
+    <color name="level_inactive_bg">#00000000</color>
+    <color name="level_inactive_stroke">#6200EE</color>
+    <color name="level_inactive_text">#6200EE</color>
     <string name="action_connection_settings">Connection Settings</string>
     <string name="action_process_log">Process Log</string>
     <string name="action_start">Start</string>
