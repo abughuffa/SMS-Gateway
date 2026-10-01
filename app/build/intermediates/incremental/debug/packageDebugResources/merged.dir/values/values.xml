@@ -32,11 +32,11 @@
     <string name="rb_accessory">Accessory</string>
     <string name="rb_adb">ADB forward</string>
     <string name="save_and_apply">Save &amp; Apply</string>
+    <string name="service_label">Service:</string>
     <string name="service_no_mode">No mode selected</string>
-    <string name="service_starting">Service: STARTING</string>
-    <string name="service_stopped">Service: STOPPED</string>
     <string name="status_disconnected">Disconnected</string>
     <string name="status_format">Status: %1$s</string>
+    <string name="status_running">Running</string>
     <string name="status_stopped">Stopped</string>
     <string name="usb_test_triggered">USB test triggered</string>
     <string name="w">W</string>

@@ -55,7 +55,7 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
 
         startForeground(
             NOTIF_ID,
-            buildNotification(getString(R.string.service_starting))
+            buildNotification(getString(R.string.status_running))
         )
 
         restartJob?.cancel()

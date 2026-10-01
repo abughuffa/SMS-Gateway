@@ -22,7 +22,9 @@ import com.example.smsgateway.log.LogBuffer
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var tvState: TextView
+    private lateinit var tvServiceStatus: TextView
+    private lateinit var btnToggleService: Button
+    private var isServiceRunning = false
 
     private val permLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -31,12 +33,12 @@ class MainActivity : AppCompatActivity() {
         if (allGranted) {
             startGatewayService()
         } else {
-            // Tell the user clearly, don't silently start a broken service.
-            tvState.text = getString(R.string.service_stopped) +
-                    " — missing permissions"
+            tvServiceStatus.text = getString(R.string.status_stopped)
+            tvServiceStatus.setTextColor(resources.getColor(android.R.color.holo_red_dark, theme))
+            btnToggleService.text = getString(R.string.action_start)
+            isServiceRunning = false
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -58,15 +60,20 @@ class MainActivity : AppCompatActivity() {
             WindowInsetsCompat.CONSUMED
         }
 
-        tvState = findViewById(R.id.tvState)
+        tvServiceStatus = findViewById(R.id.tvServiceStatus)
+        btnToggleService = findViewById(R.id.btnToggleService)
 
-        findViewById<Button>(R.id.btnStart).setOnClickListener {
-            requestNeededPermissions()
-        }
+        // Check if service is currently running
+        isServiceRunning = isGatewayServiceRunning()
+        updateUI()
 
-        findViewById<Button>(R.id.btnStop).setOnClickListener {
-            stopService(Intent(this, GatewayService::class.java))
-            tvState.text = getString(R.string.service_stopped)
+        // Toggle button: Start or Stop
+        btnToggleService.setOnClickListener {
+            if (isServiceRunning) {
+                stopGatewayService()
+            } else {
+                requestNeededPermissions()
+            }
         }
 
         findViewById<Button>(R.id.btnConnection).setOnClickListener {
@@ -85,9 +92,28 @@ class MainActivity : AppCompatActivity() {
             this,
             Intent(this, GatewayService::class.java)
         )
-        tvState.text = getString(R.string.service_starting)
-
+        isServiceRunning = true
+        updateUI()
         LogBuffer.i("Main", "Starting GatewayService")
+    }
+
+    private fun stopGatewayService() {
+        stopService(Intent(this, GatewayService::class.java))
+        isServiceRunning = false
+        updateUI()
+        LogBuffer.i("Main", "Stopping GatewayService")
+    }
+
+    private fun updateUI() {
+        if (isServiceRunning) {
+            tvServiceStatus.text = getString(R.string.status_running)
+            tvServiceStatus.setTextColor(resources.getColor(android.R.color.holo_green_dark, theme))
+            btnToggleService.text = getString(R.string.action_stop)
+        } else {
+            tvServiceStatus.text = getString(R.string.status_stopped)
+            tvServiceStatus.setTextColor(resources.getColor(android.R.color.holo_red_dark, theme))
+            btnToggleService.text = getString(R.string.action_start)
+        }
     }
 
     /**
@@ -124,5 +150,14 @@ class MainActivity : AppCompatActivity() {
         LogBuffer.i("Main", "Requesting ${needed.size} permissions: ${needed.joinToString { it.substringAfterLast('.') }}")
     }
 
-
+    /**
+     * Check if GatewayService is currently running.
+     * Note: This is a simple check. For production, consider using a more robust method.
+     */
+    private fun isGatewayServiceRunning(): Boolean {
+        val manager = getSystemService(ACTIVITY_SERVICE) as android.app.ActivityManager
+        @Suppress("DEPRECATION")
+        return manager.getRunningServices(Integer.MAX_VALUE)
+            .any { it.service.className == GatewayService::class.java.name }
+    }
 }

@@ -5,11 +5,9 @@
 
     <!-- Main screen -->
     <string name="main_title">SMS Gateway</string>
-    <string name="service_starting">Service: STARTING</string>
-    <string name="service_stopped">Service: STOPPED</string>
+    <string name="action_connection_settings">Connection Settings</string>
     <string name="action_start">Start</string>
     <string name="action_stop">Stop</string>
-    <string name="action_connection_settings">Connection Settings</string>
 
     <!-- Service -->
     <string name="service_no_mode">No mode selected</string>
@@ -23,8 +21,10 @@
     <string name="cancel">Cancel</string>
 
     <!-- Status line -->
-    <string name="status_format">Status: %1$s</string>
+    <string name="service_label">Service:</string>
+    <string name="status_running">Running</string>
     <string name="status_stopped">Stopped</string>
+    <string name="status_format">Status: %1$s</string>
     <string name="status_disconnected">Disconnected</string>
 
     <!-- Wi-Fi fragment -->

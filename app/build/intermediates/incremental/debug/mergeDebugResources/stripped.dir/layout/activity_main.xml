@@ -13,38 +13,94 @@
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvState"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/service_stopped" />
-
-    <Button
-        android:id="@+id/btnStart"
+    <!-- Service status header with toggle button -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/action_start" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:baselineAligned="false">
 
-    <Button
-        android:id="@+id/btnStop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/action_stop" />
+        <!-- Label -->
+        <TextView
+            android:id="@+id/tvServiceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/service_label"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:labelFor="@id/tvServiceStatus"
+            android:ellipsize="end" />
+
+        <!-- Status pill -->
+        <TextView
+            android:id="@+id/tvServiceStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="@string/status_stopped"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:letterSpacing="0.05"
+            android:textColor="@android:color/holo_red_dark" />
+
+        <!-- Spacer: pushes the button to the right edge -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Action button: right-aligned -->
+        <Button
+            android:id="@+id/btnToggleService"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:paddingHorizontal="20dp"
+            android:text="@string/action_start"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            style="@style/Widget.Material3.Button.TonalButton" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnConnection"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="24dp"
         android:text="@string/action_connection_settings" />
+<!--    <Button-->
+<!--        android:id="@+id/btnConnection"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:text="@string/action_connection_settings" />-->
 
     <Button
         android:id="@+id/btnProcessLog"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:paddingHorizontal="24dp"
         android:text="@string/action_process_log" />
+
+<!--    <Button-->
+<!--        android:id="@+id/btnProcessLog"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:text="@string/action_process_log" />-->
 </LinearLayout>

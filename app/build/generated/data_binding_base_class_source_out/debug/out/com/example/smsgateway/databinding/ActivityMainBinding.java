@@ -27,27 +27,27 @@ public final class ActivityMainBinding implements ViewBinding {
   public final Button btnProcessLog;
 
   @NonNull
-  public final Button btnStart;
-
-  @NonNull
-  public final Button btnStop;
+  public final Button btnToggleService;
 
   @NonNull
   public final LinearLayout root;
 
   @NonNull
-  public final TextView tvState;
+  public final TextView tvServiceLabel;
+
+  @NonNull
+  public final TextView tvServiceStatus;
 
   private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button btnConnection,
-      @NonNull Button btnProcessLog, @NonNull Button btnStart, @NonNull Button btnStop,
-      @NonNull LinearLayout root, @NonNull TextView tvState) {
+      @NonNull Button btnProcessLog, @NonNull Button btnToggleService, @NonNull LinearLayout root,
+      @NonNull TextView tvServiceLabel, @NonNull TextView tvServiceStatus) {
     this.rootView = rootView;
     this.btnConnection = btnConnection;
     this.btnProcessLog = btnProcessLog;
-    this.btnStart = btnStart;
-    this.btnStop = btnStop;
+    this.btnToggleService = btnToggleService;
     this.root = root;
-    this.tvState = tvState;
+    this.tvServiceLabel = tvServiceLabel;
+    this.tvServiceStatus = tvServiceStatus;
   }
 
   @Override
@@ -89,28 +89,28 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.btnStart;
-      Button btnStart = ViewBindings.findChildViewById(rootView, id);
-      if (btnStart == null) {
-        break missingId;
-      }
-
-      id = R.id.btnStop;
-      Button btnStop = ViewBindings.findChildViewById(rootView, id);
-      if (btnStop == null) {
+      id = R.id.btnToggleService;
+      Button btnToggleService = ViewBindings.findChildViewById(rootView, id);
+      if (btnToggleService == null) {
         break missingId;
       }
 
       LinearLayout root = (LinearLayout) rootView;
 
-      id = R.id.tvState;
-      TextView tvState = ViewBindings.findChildViewById(rootView, id);
-      if (tvState == null) {
+      id = R.id.tvServiceLabel;
+      TextView tvServiceLabel = ViewBindings.findChildViewById(rootView, id);
+      if (tvServiceLabel == null) {
+        break missingId;
+      }
+
+      id = R.id.tvServiceStatus;
+      TextView tvServiceStatus = ViewBindings.findChildViewById(rootView, id);
+      if (tvServiceStatus == null) {
         break missingId;
       }
 
       return new ActivityMainBinding((LinearLayout) rootView, btnConnection, btnProcessLog,
-          btnStart, btnStop, root, tvState);
+          btnToggleService, root, tvServiceLabel, tvServiceStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

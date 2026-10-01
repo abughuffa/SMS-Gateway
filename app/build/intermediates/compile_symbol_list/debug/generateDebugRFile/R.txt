@@ -12,8 +12,7 @@ int id btnLevelWarn 0x0
 int id btnProcessLog 0x0
 int id btnSave 0x0
 int id btnShare 0x0
-int id btnStart 0x0
-int id btnStop 0x0
+int id btnToggleService 0x0
 int id btnUsbTest 0x0
 int id btnWifiRefreshIp 0x0
 int id cbAutoScroll 0x0
@@ -32,7 +31,8 @@ int id tilConnectionType 0x0
 int id tvIpList 0x0
 int id tvLevel 0x0
 int id tvMessage 0x0
-int id tvState 0x0
+int id tvServiceLabel 0x0
+int id tvServiceStatus 0x0
 int id tvTag 0x0
 int id tvTime 0x0
 int id tvUsbStatus 0x0
@@ -76,11 +76,11 @@ int string notif_channel_name 0x0
 int string rb_accessory 0x0
 int string rb_adb 0x0
 int string save_and_apply 0x0
+int string service_label 0x0
 int string service_no_mode 0x0
-int string service_starting 0x0
-int string service_stopped 0x0
 int string status_disconnected 0x0
 int string status_format 0x0
+int string status_running 0x0
 int string status_stopped 0x0
 int string usb_test_triggered 0x0
 int string w 0x0

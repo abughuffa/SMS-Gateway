@@ -2154,14 +2154,14 @@
   </string>
     <string description="Content description for the X button to clear text [CHAR_LIMIT=NONE]" name="searchview_clear_text_content_description">Clear text</string>
     <string description="Content description for the navigation button to return to the previous screen [CHAR_LIMIT=NONE]" name="searchview_navigation_content_description">Back</string>
+    <string name="service_label">Service:</string>
     <string name="service_no_mode">No mode selected</string>
-    <string name="service_starting">Service: STARTING</string>
-    <string name="service_stopped">Service: STOPPED</string>
     <string description="Title of the side sheet&apos;s accessibility pane that is spoken by TalkBack when the side sheet appears on screen. [CHAR_LIMIT=NONE]" name="side_sheet_accessibility_pane_title">Side Sheet</string>
     <string name="side_sheet_behavior" translatable="false">com.google.android.material.sidesheet.SideSheetBehavior</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="status_disconnected">Disconnected</string>
     <string name="status_format">Status: %1$s</string>
+    <string name="status_running">Running</string>
     <string name="status_stopped">Stopped</string>
     <string name="usb_test_triggered">USB test triggered</string>
     <string name="w">W</string>
