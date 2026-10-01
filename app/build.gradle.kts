@@ -16,8 +16,18 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             isMinifyEnabled = false
+            isShrinkResources = false
+        }
+
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -57,7 +67,7 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.9.3")
     implementation("androidx.fragment:fragment-ktx:1.8.5")
 
-    // Ktor 3.6.0 — CIO engine
+    // Ktor 3.6.0 — lightweight server runtime
     implementation("io.ktor:ktor-server-cio:3.6.0")
     implementation("io.ktor:ktor-server-core:3.6.0")
     implementation("io.ktor:ktor-server-content-negotiation:3.6.0")

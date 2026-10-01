@@ -19,11 +19,14 @@ import com.example.smsgateway.ui.connection.ConnectionPrefs
 import com.example.smsgateway.ui.connection.UsbMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancel
 
 class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
+    // Scope for background work; cancel on shutdown
     private val workScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     companion object {
@@ -32,6 +35,7 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
     }
 
     private var lastConfig: ConnectionConfig = ConnectionConfig()
+    private var restartJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -54,7 +58,8 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
             buildNotification(getString(R.string.service_starting))
         )
 
-        workScope.launch {
+        restartJob?.cancel()
+        restartJob = workScope.launch {
             startGatewayWithConfig(cfg)
         }
 
@@ -65,15 +70,23 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
         if (prefs == null) return
 
         val newConfig = ConnectionPrefs.load(this)
-        if (newConfig != lastConfig) {
-            LogBuffer.i("GatewayService", "Settings changed, restarting gateway")
-            restartGateway(newConfig)
-            lastConfig = newConfig
+
+        // Only restart if config actually changed
+        if (newConfig == lastConfig) {
+            return
         }
+
+        LogBuffer.i("GatewayService", "Config changed, restarting gateway")
+        //LogBuffer.i("GatewayService", "  Old: mode=${lastConfig.mode} port=${lastConfig.wifiPort}")
+        //LogBuffer.i("GatewayService", "  New: mode=${newConfig.mode} port=${newConfig.wifiPort}")
+
+        restartGateway(newConfig)
+        lastConfig = newConfig
     }
 
     private fun restartGateway(cfg: ConnectionConfig) {
-        workScope.launch {
+        restartJob?.cancel()
+        restartJob = workScope.launch {
             try {
                 startGatewayWithConfig(cfg)
             } catch (e: Exception) {
@@ -84,7 +97,11 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
     }
 
     private fun startGatewayWithConfig(cfg: ConnectionConfig) {
-        try { GatewayServer.stop() } catch (_: Throwable) {}
+        try {
+            GatewayServer.stop()
+        } catch (_: Throwable) {
+            // ignore stop errors from a previous instance
+        }
 
         when (cfg.mode) {
             ConnectionMode.WIFI -> {
@@ -132,9 +149,18 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
         val prefs = getSharedPreferences("connection_prefs", Context.MODE_PRIVATE)
         prefs.unregisterOnSharedPreferenceChangeListener(this)
 
+        restartJob?.cancel()
+
         workScope.launch {
-            try { GatewayServer.stop() } catch (_: Throwable) {}
-            try { GatewayServer.shutdown() } catch (_: Throwable) {}
+            try {
+                GatewayServer.stop()
+            } catch (_: Throwable) {
+            } finally {
+                try {
+                    GatewayServer.shutdown()
+                } catch (_: Throwable) {
+                }
+            }
         }
 
         super.onDestroy()

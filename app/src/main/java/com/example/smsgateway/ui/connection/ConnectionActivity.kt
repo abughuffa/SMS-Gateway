@@ -25,9 +25,6 @@ class ConnectionActivity : AppCompatActivity() {
     private val modes = listOf(ConnectionMode.USB, ConnectionMode.WIFI)
 
     private var currentMode: ConnectionMode? = null
-    private lateinit var act: MaterialAutoCompleteTextView
-
-    /** Snapshot taken on first entry so Cancel can restore it. */
     private lateinit var initialConfig: ConnectionConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +46,8 @@ class ConnectionActivity : AppCompatActivity() {
             )
         } ?: ConnectionPrefs.load(this)
 
+        vm.loadConfig(this)
+
         val root = findViewById<View>(R.id.root)
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val bars = insets.getInsets(
@@ -56,15 +55,13 @@ class ConnectionActivity : AppCompatActivity() {
                         or WindowInsetsCompat.Type.displayCutout()
             )
             v.updatePadding(
-                left = bars.left,
-                top = bars.top,
-                right = bars.right,
-                bottom = bars.bottom
+                left = bars.left, top = bars.top,
+                right = bars.right, bottom = bars.bottom
             )
             WindowInsetsCompat.CONSUMED
         }
 
-        act = findViewById(R.id.actConnectionType)
+        val act = findViewById<MaterialAutoCompleteTextView>(R.id.actConnectionType)
         act.setAdapter(ArrayAdapter(this, android.R.layout.simple_list_item_1, labels))
 
         val saved = vm.config.value.mode
@@ -76,8 +73,19 @@ class ConnectionActivity : AppCompatActivity() {
             showFragment(modes[position])
         }
 
-        findViewById<Button>(R.id.btnSave).setOnClickListener { finish() }
+        // SAVE BUTTON: Save both wifi and usb config to SharedPreferences
+        findViewById<Button>(R.id.btnSave).setOnClickListener {
+            val changed = vm.save(this)
+            if (changed) {
+                findViewById<Button>(R.id.btnSave).text = "Saved!"
+                findViewById<Button>(R.id.btnSave).postDelayed({
+                    findViewById<Button>(R.id.btnSave).text = getString(R.string.save_and_apply)
+                }, 2000)
+            }
+            finish()
+        }
 
+        // CANCEL BUTTON: Revert to initial config
         findViewById<Button>(R.id.btnCancel).setOnClickListener {
             ConnectionPrefs.save(this, initialConfig)
             vm.update { initialConfig }

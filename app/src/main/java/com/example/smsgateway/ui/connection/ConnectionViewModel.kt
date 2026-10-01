@@ -1,28 +1,54 @@
 package com.example.smsgateway.ui.connection
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.smsgateway.log.LogBuffer
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ConnectionViewModel(app: Application) : AndroidViewModel(app) {
+class ConnectionViewModel : ViewModel() {
 
-    private val _config = MutableStateFlow(ConnectionPrefs.load(app))
-    val config: StateFlow<ConnectionConfig> = _config.asStateFlow()
+    private val _config = MutableStateFlow(ConnectionConfig())
+    val config: StateFlow<ConnectionConfig> = _config
 
-    private val _wifiStatus = MutableStateFlow("Stopped")
-    val wifiStatus: StateFlow<String> = _wifiStatus.asStateFlow()
+    private val _wifiStatus = MutableStateFlow("Offline")
+    val wifiStatus: StateFlow<String> = _wifiStatus
 
-    private val _usbStatus = MutableStateFlow("Disconnected")
-    val usbStatus: StateFlow<String> = _usbStatus.asStateFlow()
+    private val _usbStatus = MutableStateFlow("Offline")
+    val usbStatus: StateFlow<String> = _usbStatus
 
-    fun update(transform: (ConnectionConfig) -> ConnectionConfig) {
-        val newCfg = transform(_config.value)
-        _config.value = newCfg
-        ConnectionPrefs.save(getApplication(), newCfg)
+    fun loadConfig(context: Context) {
+        _config.value = ConnectionPrefs.load(context)
     }
 
-    fun setWifiStatus(s: String) { _wifiStatus.value = s }
-    fun setUsbStatus(s: String) { _usbStatus.value = s }
+    /**
+     * Update the in-memory config (doesn't save yet).
+     * Used while editing fields.
+     */
+    fun update(block: (ConnectionConfig) -> ConnectionConfig) {
+        _config.value = block(_config.value)
+    }
+
+    /**
+     * Save the current config to SharedPreferences.
+     * Only saves if something changed.
+     * Returns true if saved, false if no change.
+     */
+    fun save(context: Context): Boolean {
+        return ConnectionPrefs.save(context, _config.value)
+    }
+
+    fun updateWifiStatus(status: String) {
+        _wifiStatus.value = status
+        LogBuffer.i("ConnectionVM", "WiFi status: $status")
+    }
+
+    fun updateUsbStatus(status: String) {
+        _usbStatus.value = status
+        LogBuffer.i("ConnectionVM", "USB status: $status")
+    }
 }

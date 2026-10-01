@@ -40,14 +40,15 @@ class WifiConnectionFragment : Fragment() {
         etToken.setText(cfg.wifiToken ?: "")
         cbAll.isChecked = cfg.wifiBindAll
 
-        // Persist port on every edit (with a sane range check).
+        // Update in-memory config as user edits (NO auto-save yet)
         etPort.doAfterTextChanged { text ->
             text?.toString()?.toIntOrNull()?.let { p ->
-                if (p in 1..65535) vm.update { it.copy(wifiPort = p) }
+                if (p in 1..65535) {
+                    vm.update { it.copy(wifiPort = p) }
+                }
             }
         }
 
-        // Persist token on every edit.
         etToken.doAfterTextChanged { text ->
             vm.update {
                 it.copy(

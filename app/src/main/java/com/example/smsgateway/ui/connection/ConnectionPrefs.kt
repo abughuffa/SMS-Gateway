@@ -1,56 +1,65 @@
 package com.example.smsgateway.ui.connection
 
 import android.content.Context
-import androidx.core.content.edit
-
-enum class ConnectionMode { NONE, USB, WIFI }
-enum class UsbMode { ADB_FORWARD, ACCESSORY }
 
 data class ConnectionConfig(
     val mode: ConnectionMode = ConnectionMode.NONE,
     val wifiPort: Int = 8080,
-    val wifiBindAll: Boolean = true,
     val wifiToken: String? = null,
-    val usbMode: UsbMode = UsbMode.ADB_FORWARD,
-    val usbPort: Int = 8081
+    val wifiBindAll: Boolean = false,
+    val usbPort: Int = 8080,
+    val usbMode: UsbMode = UsbMode.ADB_FORWARD
 )
 
+enum class ConnectionMode { WIFI, USB, NONE }
+enum class UsbMode { ADB_FORWARD, ACCESSORY }
+
 object ConnectionPrefs {
-    private const val PREFS = "connection_prefs"
+    private const val PREFS_NAME = "connection_prefs"
+    private const val KEY_MODE = "mode"
+    private const val KEY_WIFI_PORT = "wifi_port"
+    private const val KEY_WIFI_TOKEN = "wifi_token"
+    private const val KEY_WIFI_BIND_ALL = "wifi_bind_all"
+    private const val KEY_USB_PORT = "usb_port"
+    private const val KEY_USB_MODE = "usb_mode"
 
-    private fun prefs(ctx: Context) =
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-
-    fun load(ctx: Context): ConnectionConfig {
-        val p = prefs(ctx)
-
-        val rawMode = p.getString("mode", ConnectionMode.NONE.name)!!
-        // Guard against stale / corrupt values from previous installs.
-        val mode = runCatching { ConnectionMode.valueOf(rawMode) }
-            .getOrDefault(ConnectionMode.NONE)
-
-        val rawUsb = p.getString("usb_mode", UsbMode.ADB_FORWARD.name)!!
-        val usbMode = runCatching { UsbMode.valueOf(rawUsb) }
-            .getOrDefault(UsbMode.ADB_FORWARD)
-
+    fun load(context: Context): ConnectionConfig {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return ConnectionConfig(
-            mode = mode,
-            wifiPort = p.getInt("wifi_port", 8080).coerceIn(1, 65535),
-            wifiBindAll = p.getBoolean("wifi_bind_all", true),
-            wifiToken = p.getString("wifi_token", null),
-            usbMode = usbMode,
-            usbPort = p.getInt("usb_port", 8081).coerceIn(1, 65535)
+            mode = ConnectionMode.valueOf(
+                prefs.getString(KEY_MODE, ConnectionMode.NONE.name) ?: ConnectionMode.NONE.name
+            ),
+            wifiPort = prefs.getInt(KEY_WIFI_PORT, 8080),
+            wifiToken = prefs.getString(KEY_WIFI_TOKEN, null),
+            wifiBindAll = prefs.getBoolean(KEY_WIFI_BIND_ALL, false),
+            usbPort = prefs.getInt(KEY_USB_PORT, 8080),
+            usbMode = UsbMode.valueOf(
+                prefs.getString(KEY_USB_MODE, UsbMode.ADB_FORWARD.name) ?: UsbMode.ADB_FORWARD.name
+            )
         )
     }
 
-    fun save(ctx: Context, cfg: ConnectionConfig) {
-        prefs(ctx).edit {
-            putString("mode", cfg.mode.name)
-            putInt("wifi_port", cfg.wifiPort)
-            putBoolean("wifi_bind_all", cfg.wifiBindAll)
-            putString("wifi_token", cfg.wifiToken)
-            putString("usb_mode", cfg.usbMode.name)
-            putInt("usb_port", cfg.usbPort)
+    /**
+     * Save config to SharedPreferences.
+     * Returns true if any value actually changed.
+     */
+    fun save(context: Context, config: ConnectionConfig): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val old = load(context)
+
+        // Only write if something changed
+        if (old == config) return false
+
+        prefs.edit().apply {
+            putString(KEY_MODE, config.mode.name)
+            putInt(KEY_WIFI_PORT, config.wifiPort)
+            putString(KEY_WIFI_TOKEN, config.wifiToken)
+            putBoolean(KEY_WIFI_BIND_ALL, config.wifiBindAll)
+            putInt(KEY_USB_PORT, config.usbPort)
+            putString(KEY_USB_MODE, config.usbMode.name)
+            apply()
         }
+
+        return true
     }
 }

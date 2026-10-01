@@ -32,11 +32,13 @@ class UsbConnectionFragment : Fragment() {
 
         val cfg = vm.config.value
         etPort.setText(String.format(Locale.US, "%d", cfg.usbPort))
+
         when (cfg.usbMode) {
             UsbMode.ADB_FORWARD -> rg.check(R.id.rbAdb)
             UsbMode.ACCESSORY -> rg.check(R.id.rbAccessory)
         }
 
+        // Update in-memory config as user changes radio button (NO auto-save yet)
         rg.setOnCheckedChangeListener { _, id ->
             vm.update {
                 it.copy(
@@ -47,10 +49,12 @@ class UsbConnectionFragment : Fragment() {
             }
         }
 
-        // Persist on every edit — not just on focus loss.
+        // Update in-memory config as user edits port (NO auto-save yet)
         etPort.doAfterTextChanged { text ->
             text?.toString()?.toIntOrNull()?.let { p ->
-                if (p in 1..65535) vm.update { it.copy(usbPort = p) }
+                if (p in 1..65535) {
+                    vm.update { it.copy(usbPort = p) }
+                }
             }
         }
 

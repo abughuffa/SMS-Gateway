@@ -22,7 +22,6 @@ import com.example.smsgateway.sms.SmsSender
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
-import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.EmbeddedServer
@@ -64,7 +63,10 @@ object GatewayServer {
     private const val TAG = "GatewayServer"
     private const val ACTION_USB_PERMISSION = "com.example.smsgateway.USB_PERMISSION"
 
+    // Turn off expensive pretty-printing; avoid unnecessary object churn
     private val json = Json { ignoreUnknownKeys = true }
+
+    // Use a supervisor job to allow independent failure of sub-tasks
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     @Volatile private var appContext: Context? = null
@@ -133,6 +135,7 @@ object GatewayServer {
 
         currentMode = null
         setStatus("Disconnected")
+
         if (wasRunning) {
             Log.i(TAG, "Gateway stopped")
         }
@@ -141,7 +144,10 @@ object GatewayServer {
     fun shutdown() {
         stop()
         permissionReceiver?.let {
-            try { appContext?.unregisterReceiver(it) } catch (_: Throwable) {}
+            try {
+                appContext?.unregisterReceiver(it)
+            } catch (_: Throwable) {
+            }
         }
         permissionReceiver = null
         statusListener = null
@@ -295,6 +301,7 @@ object GatewayServer {
             }
         }
     }
+
     private fun buildHttpStatus(): StatusResponse {
         val uptimeSec = if (serverStartedAt == 0L) 0L
         else (System.currentTimeMillis() - serverStartedAt) / 1000
