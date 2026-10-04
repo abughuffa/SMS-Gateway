@@ -9,25 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RadioGroup
-            android:id="@+id/rgUsbMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/rbAdb"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/rb_adb" />
-
-            <RadioButton
-                android:id="@+id/rbAccessory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/rb_accessory" />
-        </RadioGroup>
-
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

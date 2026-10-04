@@ -15,10 +15,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.example.smsgateway.log.LogBuffer
+import com.example.smsgateway.log.LogViewerActivity
 import com.example.smsgateway.service.GatewayService
 import com.example.smsgateway.ui.connection.ConnectionActivity
-import com.example.smsgateway.log.LogViewerActivity
-import com.example.smsgateway.log.LogBuffer
 
 class MainActivity : AppCompatActivity() {
 

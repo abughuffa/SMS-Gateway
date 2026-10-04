@@ -16,13 +16,12 @@ import com.example.smsgateway.log.LogBuffer
 import com.example.smsgateway.ui.connection.ConnectionConfig
 import com.example.smsgateway.ui.connection.ConnectionMode
 import com.example.smsgateway.ui.connection.ConnectionPrefs
-import com.example.smsgateway.ui.connection.UsbMode
+//import com.example.smsgateway.ui.connection.UsbMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.cancel
 
 class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -77,8 +76,6 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
         }
 
         LogBuffer.i("GatewayService", "Config changed, restarting gateway")
-        //LogBuffer.i("GatewayService", "  Old: mode=${lastConfig.mode} port=${lastConfig.wifiPort}")
-        //LogBuffer.i("GatewayService", "  New: mode=${newConfig.mode} port=${newConfig.wifiPort}")
 
         restartGateway(newConfig)
         lastConfig = newConfig
@@ -124,13 +121,8 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
                     onStatus = { updateNotification("USB: $it") }
                 )
 
-                val usbMode = when (cfg.usbMode) {
-                    UsbMode.ADB_FORWARD -> GatewayServer.ConnectionMode.USB_ADB
-                    UsbMode.ACCESSORY -> GatewayServer.ConnectionMode.USB_ACCESSORY
-                }
-
                 GatewayServer.start(
-                    mode = usbMode,
+                    mode = GatewayServer.ConnectionMode.WIFI,
                     port = cfg.usbPort,
                     apiToken = null,
                     bindAll = false

@@ -4,10 +4,6 @@
         "source": "com.example.smsgateway.app-main-39:/mipmap-hdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/xml_accessory_filter.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/xml/accessory_filter.xml"
-    },
-    {
         "merged": "com.example.smsgateway.app-debug-37:/layout_item_log_entry.xml.flat",
         "source": "com.example.smsgateway.app-main-39:/layout/item_log_entry.xml"
     },

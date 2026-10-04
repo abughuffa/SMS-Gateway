@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
@@ -26,28 +25,10 @@ class UsbConnectionFragment : Fragment() {
     ): View = inflater.inflate(R.layout.fragment_usb, container, false)
 
     override fun onViewCreated(v: View, s: Bundle?) {
-        val rg = v.findViewById<RadioGroup>(R.id.rgUsbMode)
         val etPort = v.findViewById<EditText>(R.id.etUsbPort)
         val tvStatus = v.findViewById<TextView>(R.id.tvUsbStatus)
-
         val cfg = vm.config.value
         etPort.setText(String.format(Locale.US, "%d", cfg.usbPort))
-
-        when (cfg.usbMode) {
-            UsbMode.ADB_FORWARD -> rg.check(R.id.rbAdb)
-            UsbMode.ACCESSORY -> rg.check(R.id.rbAccessory)
-        }
-
-        // Update in-memory config as user changes radio button (NO auto-save yet)
-        rg.setOnCheckedChangeListener { _, id ->
-            vm.update {
-                it.copy(
-                    mode = ConnectionMode.USB,
-                    usbMode = if (id == R.id.rbAdb) UsbMode.ADB_FORWARD
-                    else UsbMode.ACCESSORY
-                )
-            }
-        }
 
         // Update in-memory config as user edits port (NO auto-save yet)
         etPort.doAfterTextChanged { text ->

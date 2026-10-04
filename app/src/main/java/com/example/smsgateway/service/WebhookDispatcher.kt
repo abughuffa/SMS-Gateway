@@ -1,9 +1,9 @@
 package com.example.smsgateway.service
 
-import android.content.Context
 //import android.util.Log
-import com.example.smsgateway.log.Log
+import android.content.Context
 import com.example.smsgateway.db.InboxDb
+import com.example.smsgateway.log.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,7 +22,7 @@ object WebhookDispatcher {
     private const val TAG = "Webhook"
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    private val json = Json { encodeDefaults = true }
+//    private val json = Json { encodeDefaults = true }
 
     fun dispatch(context: Context, id: Long, from: String, body: String, ts: Long) {
         val db = InboxDb.get(context.applicationContext)

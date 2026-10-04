@@ -7,7 +7,7 @@
     <color name="level_inactive_stroke">#6200EE</color>
     <color name="level_inactive_text">#6200EE</color>
     <string name="action_connection_settings">Connection Settings</string>
-    <string name="action_process_log">Process Log</string>
+    <string name="action_process_log">View Log</string>
     <string name="action_start">Start</string>
     <string name="action_stop">Stop</string>
     <string name="api_example">API example:\nPOST http://&lt;phone-ip>:8080/send\n{"to":"+123","body":"hi"}</string>
@@ -31,12 +31,12 @@
     <string name="log_clear">Clear</string>
     <string name="log_filter_hint">Filter (tag or text)</string>
     <string name="log_share">Share</string>
-    <string name="log_viewer_title">Process log</string>
+    <string name="log_viewer_title">Activity Log</string>
     <string name="main_title">SMS Gateway</string>
     <string name="notif_channel_name">SMS Gateway</string>
-    <string name="rb_accessory">Accessory</string>
     <string name="rb_adb">ADB forward</string>
     <string name="save_and_apply">Save &amp; Apply</string>
+    <string name="saved">Saved!</string>
     <string name="service_label">Service:</string>
     <string name="service_no_mode">No mode selected</string>
     <string name="status_disconnected">Disconnected</string>

@@ -40,7 +40,6 @@
     <!-- USB fragment -->
     <string name="hint_usb_port">USB port</string>
     <string name="rb_adb">ADB forward</string>
-    <string name="rb_accessory">Accessory</string>
     <string name="btn_usb_test">Test USB</string>
     <string name="usb_test_triggered">USB test triggered</string>
 
@@ -50,10 +49,13 @@
     <string name="w">W</string>
     <string name="e">E</string>
 
-    <string name="log_viewer_title">Process log</string>
+    <string name="log_viewer_title">Activity Log</string>
     <string name="log_filter_hint">Filter (tag or text)</string>
     <string name="log_autoscroll">Auto-scroll</string>
     <string name="log_share">Share</string>
     <string name="log_clear">Clear</string>
-    <string name="action_process_log">Process Log</string>
+    <string name="action_process_log">View Log</string>
+
+    <string name="saved">Saved!</string>
+
 </resources>

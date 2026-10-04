@@ -2,13 +2,8 @@ package com.example.smsgateway.ui.connection
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.smsgateway.log.LogBuffer
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ConnectionViewModel : ViewModel() {
 
@@ -42,13 +37,13 @@ class ConnectionViewModel : ViewModel() {
         return ConnectionPrefs.save(context, _config.value)
     }
 
-    fun updateWifiStatus(status: String) {
-        _wifiStatus.value = status
-        LogBuffer.i("ConnectionVM", "WiFi status: $status")
-    }
-
-    fun updateUsbStatus(status: String) {
-        _usbStatus.value = status
-        LogBuffer.i("ConnectionVM", "USB status: $status")
-    }
+//    fun updateWifiStatus(status: String) {
+//        _wifiStatus.value = status
+//        LogBuffer.i("ConnectionVM", "WiFi status: $status")
+//    }
+//
+//    fun updateUsbStatus(status: String) {
+//        _usbStatus.value = status
+//        LogBuffer.i("ConnectionVM", "USB status: $status")
+//    }
 }

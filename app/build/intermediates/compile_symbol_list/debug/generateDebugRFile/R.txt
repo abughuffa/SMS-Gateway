@@ -27,9 +27,6 @@ int id etUsbPort 0x0
 int id etWifiPort 0x0
 int id etWifiToken 0x0
 int id fragmentContainer 0x0
-int id rbAccessory 0x0
-int id rbAdb 0x0
-int id rgUsbMode 0x0
 int id root 0x0
 int id rvLog 0x0
 int id tilConnectionType 0x0
@@ -78,9 +75,9 @@ int string log_share 0x0
 int string log_viewer_title 0x0
 int string main_title 0x0
 int string notif_channel_name 0x0
-int string rb_accessory 0x0
 int string rb_adb 0x0
 int string save_and_apply 0x0
+int string saved 0x0
 int string service_label 0x0
 int string service_no_mode 0x0
 int string status_disconnected 0x0
@@ -90,4 +87,3 @@ int string status_stopped 0x0
 int string usb_test_triggered 0x0
 int string w 0x0
 int style Theme_Material3_DayNight 0x0
-int xml accessory_filter 0x0

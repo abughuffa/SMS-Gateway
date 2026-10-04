@@ -20,10 +20,8 @@ import kotlinx.coroutines.launch
 class ConnectionActivity : AppCompatActivity() {
 
     private val vm: ConnectionViewModel by viewModels()
-
     private val labels = listOf("USB", "Wi-Fi")
     private val modes = listOf(ConnectionMode.USB, ConnectionMode.WIFI)
-
     private var currentMode: ConnectionMode? = null
     private lateinit var initialConfig: ConnectionConfig
 
@@ -41,7 +39,6 @@ class ConnectionActivity : AppCompatActivity() {
                 wifiPort = it.getInt(STATE_WIFI_PORT),
                 wifiBindAll = it.getBoolean(STATE_WIFI_BIND_ALL),
                 wifiToken = it.getString(STATE_WIFI_TOKEN),
-                usbMode = UsbMode.valueOf(it.getString(STATE_USB_MODE)!!),
                 usbPort = it.getInt(STATE_USB_PORT)
             )
         } ?: ConnectionPrefs.load(this)
@@ -73,11 +70,11 @@ class ConnectionActivity : AppCompatActivity() {
             showFragment(modes[position])
         }
 
-        // SAVE BUTTON: Save both wifi and usb config to SharedPreferences
+        // SAVE BUTTON: Save both Wi-Fi and usb config to SharedPreferences
         findViewById<Button>(R.id.btnSave).setOnClickListener {
             val changed = vm.save(this)
             if (changed) {
-                findViewById<Button>(R.id.btnSave).text = "Saved!"
+                findViewById<Button>(R.id.btnSave).text = getString(R.string.saved)
                 findViewById<Button>(R.id.btnSave).postDelayed({
                     findViewById<Button>(R.id.btnSave).text = getString(R.string.save_and_apply)
                 }, 2000)
@@ -109,7 +106,6 @@ class ConnectionActivity : AppCompatActivity() {
         outState.putInt(STATE_WIFI_PORT, initialConfig.wifiPort)
         outState.putBoolean(STATE_WIFI_BIND_ALL, initialConfig.wifiBindAll)
         outState.putString(STATE_WIFI_TOKEN, initialConfig.wifiToken)
-        outState.putString(STATE_USB_MODE, initialConfig.usbMode.name)
         outState.putInt(STATE_USB_PORT, initialConfig.usbPort)
     }
 
@@ -136,7 +132,6 @@ class ConnectionActivity : AppCompatActivity() {
         const val STATE_WIFI_PORT = "snap_wifi_port"
         const val STATE_WIFI_BIND_ALL = "snap_wifi_bind_all"
         const val STATE_WIFI_TOKEN = "snap_wifi_token"
-        const val STATE_USB_MODE = "snap_usb_mode"
         const val STATE_USB_PORT = "snap_usb_port"
     }
 }

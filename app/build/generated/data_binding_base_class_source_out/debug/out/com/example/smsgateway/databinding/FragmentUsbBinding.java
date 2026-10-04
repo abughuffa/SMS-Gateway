@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -30,26 +28,13 @@ public final class FragmentUsbBinding implements ViewBinding {
   public final TextInputEditText etUsbPort;
 
   @NonNull
-  public final RadioButton rbAccessory;
-
-  @NonNull
-  public final RadioButton rbAdb;
-
-  @NonNull
-  public final RadioGroup rgUsbMode;
-
-  @NonNull
   public final TextView tvUsbStatus;
 
   private FragmentUsbBinding(@NonNull ScrollView rootView, @NonNull Button btnUsbTest,
-      @NonNull TextInputEditText etUsbPort, @NonNull RadioButton rbAccessory,
-      @NonNull RadioButton rbAdb, @NonNull RadioGroup rgUsbMode, @NonNull TextView tvUsbStatus) {
+      @NonNull TextInputEditText etUsbPort, @NonNull TextView tvUsbStatus) {
     this.rootView = rootView;
     this.btnUsbTest = btnUsbTest;
     this.etUsbPort = etUsbPort;
-    this.rbAccessory = rbAccessory;
-    this.rbAdb = rbAdb;
-    this.rgUsbMode = rgUsbMode;
     this.tvUsbStatus = tvUsbStatus;
   }
 
@@ -92,32 +77,13 @@ public final class FragmentUsbBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.rbAccessory;
-      RadioButton rbAccessory = ViewBindings.findChildViewById(rootView, id);
-      if (rbAccessory == null) {
-        break missingId;
-      }
-
-      id = R.id.rbAdb;
-      RadioButton rbAdb = ViewBindings.findChildViewById(rootView, id);
-      if (rbAdb == null) {
-        break missingId;
-      }
-
-      id = R.id.rgUsbMode;
-      RadioGroup rgUsbMode = ViewBindings.findChildViewById(rootView, id);
-      if (rgUsbMode == null) {
-        break missingId;
-      }
-
       id = R.id.tvUsbStatus;
       TextView tvUsbStatus = ViewBindings.findChildViewById(rootView, id);
       if (tvUsbStatus == null) {
         break missingId;
       }
 
-      return new FragmentUsbBinding((ScrollView) rootView, btnUsbTest, etUsbPort, rbAccessory,
-          rbAdb, rgUsbMode, tvUsbStatus);
+      return new FragmentUsbBinding((ScrollView) rootView, btnUsbTest, etUsbPort, tvUsbStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

@@ -9,9 +9,8 @@ import android.os.Build
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
-//import android.util.Log
-import com.example.smsgateway.log.Log
 import androidx.core.content.ContextCompat
+import com.example.smsgateway.log.Log
 import java.util.UUID
 
 data class SendResult(
