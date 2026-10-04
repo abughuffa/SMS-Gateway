@@ -31,6 +31,23 @@
         android:theme="@style/Theme.Material3.DayNight">
 
         <activity
+            android:name="com.example.smsgateway.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />-->
+<!--            </intent-filter>-->
+
+<!--            <meta-data-->
+<!--                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"-->
+<!--                android:resource="@xml/accessory_filter" />-->
+        </activity>
+        <activity
             android:name=".ui.connection.ConnectionActivity"
             android:exported="false" />
         <activity
