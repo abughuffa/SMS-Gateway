@@ -1,0 +1,23 @@
+adb forward tcp:8081 tcp:8080
+
+curl -s http://127.0.0.1:8081/status
+
+{"mode":"WIFI","uptimeSec":16,"simReady":true,"sentCount":0,"receivedCount":0}
+
+curl -X POST http://127.0.0.1:8081/send   -H "Content-Type: application/json"   -d '{"to":"+218924668017","body":"Hello from the gateway"}'
+
+{"id":"bf15db84-8da0-41c2-ab92-fa25f9e8d7c0","status":"queued"}
+
+curl http://127.0.0.1:8081/inbox?since=0&limit=50
+
+[3] 16030 
+
+curl -X POST http://127.0.0.1:8081//webhook -H "Content-Type: application/json" -d '{"url":"https://example.com/sms","secret":"hmac-secret"}'
+
+{"messages":[{"id":1,"from":"+218923347871","body":"Hello from the gateway","ts":1790361757712}]}{"ok":true}[3]   Done  curl http://127.0.0.1:8081/inbox?since=0
+
+
+curl -X DELETE http://127.0.0.1:8081/webhook
+
+{"ok":true}
+

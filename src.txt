@@ -1,0 +1,2029 @@
+in the folder /home/mohammed/Projects/SmsGateway 
+
+the file build.gradle.kts
+plugins {
+    id("com.android.application") version "9.4.1" apply false
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.10" apply false
+}
+
+the file gradle.properties
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+org.gradle.parallel=true
+org.gradle.caching=true
+org.gradle.configuration-cache=true
+android.aapt2FromMavenOverride=/home/mohammed/Android/Sdk/build-tools/34.0.0/aapt2
+
+android.useAndroidX=true
+android.nonTransitiveRClass=true
+
+# Data Binding is unused in this project; disable it globally
+# to avoid the AGP 9.0 "Cannot mutate the dependencies" bug.
+android.defaults.buildfeatures.databinding=false
+
+# Enabled parallel sync for Gradle 9.4+
+org.gradle.tooling.parallel=true
+
+the file settings.gradle.kts
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "SmsGateway"
+include(":app")
+
+in the folder /home/mohammed/Projects/SmsGateway/app
+
+the file build.gradle.kts
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.plugin.serialization")
+}
+
+android {
+    namespace = "com.example.smsgateway"
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId = "com.example.smsgateway"
+        minSdk = 26
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = false
+    }
+
+    lint {
+        disable += setOf(
+            "GradleDependency",
+            "NewerVersionAvailable",
+            "AndroidGradlePluginVersion",
+            "OldTargetApi"
+        )
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
+}
+
+dependencies {
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+
+    // Ktor 3.6.0 — CIO engine
+    implementation("io.ktor:ktor-server-cio:3.6.0")
+    implementation("io.ktor:ktor-server-core:3.6.0")
+    implementation("io.ktor:ktor-server-content-negotiation:3.6.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.6.0")
+    implementation("io.ktor:ktor-server-status-pages:3.6.0")
+    implementation("io.ktor:ktor-server-call-logging:3.6.0")
+
+    // Coroutines + Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+}
+
+in the folder /home/mohammed/Projects/SmsGateway/app/src/main
+
+image file named as ic_launcher-playstore.png
+
+the file AndroidManifest.xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <!-- Service / notifications -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Network -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- USB -->
+    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+    <uses-feature android:name="android.hardware.usb.accessory" android:required="false" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Material3.DayNight">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/accessory_filter" />
+        </activity>
+
+        <activity
+            android:name=".ui.connection.ConnectionActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".service.GatewayService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="SMS gateway server" />
+        </service>
+
+        <receiver
+            android:name=".sms.SmsReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/xml
+
+the file accessory_filter.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <usb-accessory
+        manufacturer="Example"
+        model="SmsGatewayHost"
+        version="1.0" />
+</resources>
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/values
+
+the file colors.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources><color name="ic_launcher_background">#1976D2</color></resources>
+
+the file strings.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">SMS Gateway</string>
+
+    <!-- Main screen -->
+    <string name="main_title">SMS Gateway</string>
+    <string name="service_starting">Service: STARTING</string>
+    <string name="service_stopped">Service: STOPPED</string>
+    <string name="action_start">Start</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_connection_settings">Connection Settings</string>
+
+    <!-- Service -->
+    <string name="service_no_mode">No mode selected</string>
+    <string name="notif_channel_name">SMS Gateway</string>
+
+    <!-- Connection screen -->
+    <string name="connection_type">Connection type</string>
+    <string name="save_and_apply">Save &amp; Apply</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Status line -->
+    <string name="status_format">Status: %1$s</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="status_disconnected">Disconnected</string>
+
+    <!-- Wi-Fi fragment -->
+    <string name="hint_http_port">HTTP port (default 8080)</string>
+    <string name="hint_api_key">API key (X-Api-Key header, optional)</string>
+    <string name="label_bind_all">Bind to all interfaces (0.0.0.0)</string>
+    <string name="label_ip_list">Local IPs:</string>
+    <string name="btn_refresh_ips">Refresh IP Addresses</string>
+    <string name="local_ips_block">Local IPs:\n%1$s</string>
+    <string name="local_ips_none">(none)</string>
+    <string name="api_example">API example:\nPOST http://&lt;phone-ip&gt;:8080/send\n{"to":"+123","body":"hi"}</string>
+
+    <!-- USB fragment -->
+    <string name="hint_usb_port">USB port</string>
+    <string name="rb_adb">ADB forward</string>
+    <string name="rb_accessory">Accessory</string>
+    <string name="btn_usb_test">Test USB</string>
+    <string name="usb_test_triggered">USB test triggered</string>
+</resources>
+
+
+the file themes.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Material3.DayNight" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- defaults -->
+    </style>
+</resources>
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/drawable
+
+the file ic_launcher_foreground.xml
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startY="49.59793"
+                android:startX="42.9492"
+                android:endY="92.4963"
+                android:endX="85.84757"
+                android:type="linear">
+                <item
+                    android:color="#44000000"
+                    android:offset="0.0" />
+                <item
+                    android:color="#00000000"
+                    android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000"/>
+</vector>
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/layout
+
+the file activity_connection.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilConnectionType"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/connection_type">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/actConnectionType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp" />
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/save_and_apply" />
+    </LinearLayout>
+</LinearLayout>
+
+the file activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/main_title"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/service_stopped" />
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/action_start" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/action_stop" />
+
+    <Button
+        android:id="@+id/btnConnection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/action_connection_settings" />
+</LinearLayout>
+
+the file fragment_usb.xml
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/rgUsbMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbAdb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_adb" />
+
+            <RadioButton
+                android:id="@+id/rbAccessory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rb_accessory" />
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="@string/hint_usb_port">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUsbPort"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tvUsbStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/status_disconnected"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnUsbTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_usb_test" />
+    </LinearLayout>
+</ScrollView>
+
+the file fragment_wifi.xml
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_http_port">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etWifiPort"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="@string/hint_api_key">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etWifiToken"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/cbBindAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_bind_all" />
+
+        <TextView
+            android:id="@+id/tvWifiStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/status_stopped"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvIpList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_ip_list" />
+
+        <Button
+            android:id="@+id/btnWifiRefreshIp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_refresh_ips" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/api_example" />
+    </LinearLayout>
+</ScrollView>
+
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/mipmap-anydpi
+
+the file ic_launcher.xml
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+    <foreground android:drawable="@drawable/ic_launcher_foreground"/>
+    <monochrome android:drawable="@drawable/ic_launcher_foreground"/>
+</adaptive-icon>
+
+the file ic_launcher_round.xml
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+    <foreground android:drawable="@drawable/ic_launcher_foreground"/>
+    <monochrome android:drawable="@drawable/ic_launcher_foreground"/>
+</adaptive-icon>
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/mipmap-hdpi
+
+icon file named ic_launcher.webp
+icon file named ic_launcher_round.webp
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/mipmap-mdpi
+
+icon file named ic_launcher.webp
+icon file named ic_launcher_round.webp
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/mipmap-xhdpi
+
+icon file named ic_launcher.webp
+icon file named ic_launcher_round.webp
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/mipmap-xhdpi
+
+icon file named ic_launcher.webp
+icon file named ic_launcher_round.webp
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/res/mipmap-xxxhdpi
+
+icon file named ic_launcher.webp
+icon file named ic_launcher_round.webp
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/java/com/example/smsgateway
+
+the file MainActivity.kt
+package com.example.smsgateway
+
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
+import com.example.smsgateway.service.GatewayService
+import com.example.smsgateway.ui.connection.ConnectionActivity
+
+class MainActivity : AppCompatActivity() {
+
+    private val permLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { /* results ignored — user can retry */ }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val root = findViewById<View>(R.id.root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+
+        val tvState = findViewById<TextView>(R.id.tvState)
+
+        findViewById<Button>(R.id.btnStart).setOnClickListener {
+            requestNeededPermissions()
+            ContextCompat.startForegroundService(
+                this,
+                Intent(this, GatewayService::class.java)
+            )
+            tvState.text = getString(R.string.service_starting)
+        }
+
+        findViewById<Button>(R.id.btnStop).setOnClickListener {
+            stopService(Intent(this, GatewayService::class.java))
+            tvState.text = getString(R.string.service_stopped)
+        }
+
+        findViewById<Button>(R.id.btnConnection).setOnClickListener {
+            startActivity(Intent(this, ConnectionActivity::class.java))
+        }
+    }
+
+    private fun requestNeededPermissions() {
+        val needed = mutableListOf<String>()
+
+        listOf(
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.READ_SMS,
+            Manifest.permission.READ_PHONE_STATE
+        ).forEach {
+            if (ContextCompat.checkSelfPermission(this, it) !=
+                PackageManager.PERMISSION_GRANTED
+            ) needed += it
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) needed += Manifest.permission.POST_NOTIFICATIONS
+        }
+
+        if (needed.isNotEmpty()) {
+            permLauncher.launch(needed.toTypedArray())
+        }
+    }
+}
+
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/java/com/example/smsgateway/db
+
+the file InboxDb.kt
+package com.example.smsgateway.db
+
+import android.content.ContentValues
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import com.example.smsgateway.model.InboxMessage
+
+class InboxDb(ctx: Context) : SQLiteOpenHelper(ctx, "gateway.db", null, 1) {
+
+    override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(
+            """
+            CREATE TABLE inbox (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                sender TEXT NOT NULL,
+                body TEXT NOT NULL,
+                ts INTEGER NOT NULL
+            )
+            """.trimIndent()
+        )
+        db.execSQL("CREATE INDEX idx_ts ON inbox(ts)")
+        db.execSQL(
+            """
+            CREATE TABLE meta (
+                k TEXT PRIMARY KEY,
+                v TEXT NOT NULL
+            )
+            """.trimIndent()
+        )
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase, oldV: Int, newV: Int) {
+        db.execSQL("DROP TABLE IF EXISTS inbox")
+        db.execSQL("DROP TABLE IF EXISTS meta")
+        onCreate(db)
+    }
+
+    fun insert(sender: String, body: String, ts: Long): Long {
+        val v = ContentValues().apply {
+            put("sender", sender); put("body", body); put("ts", ts)
+        }
+        return writableDatabase.insert("inbox", null, v)
+    }
+
+    fun since(lastId: Long, limit: Int = 200): List<InboxMessage> {
+        val out = mutableListOf<InboxMessage>()
+        readableDatabase.rawQuery(
+            "SELECT id, sender, body, ts FROM inbox WHERE id > ? ORDER BY id ASC LIMIT ?",
+            arrayOf(lastId.toString(), limit.toString())
+        ).use { c ->
+            while (c.moveToNext()) {
+                out += InboxMessage(
+                    c.getLong(0), c.getString(1), c.getString(2), c.getLong(3)
+                )
+            }
+        }
+        return out
+    }
+
+    fun count(): Int {
+        readableDatabase.rawQuery("SELECT COUNT(*) FROM inbox", null).use { c ->
+            return if (c.moveToFirst()) c.getInt(0) else 0
+        }
+    }
+
+    fun getMeta(key: String): String? {
+        readableDatabase.rawQuery(
+            "SELECT v FROM meta WHERE k = ?", arrayOf(key)
+        ).use { c ->
+            return if (c.moveToFirst()) c.getString(0) else null
+        }
+    }
+
+    fun setMeta(key: String, value: String?) {
+        if (value == null) {
+            writableDatabase.delete("meta", "k = ?", arrayOf(key))
+        } else {
+            val v = ContentValues().apply { put("k", key); put("v", value) }
+            writableDatabase.insertWithOnConflict(
+                "meta", null, v, SQLiteDatabase.CONFLICT_REPLACE
+            )
+        }
+    }
+
+    @Synchronized
+    fun incr(key: String, by: Long = 1): Long {
+        val cur = getMeta(key)?.toLongOrNull() ?: 0L
+        val nv = cur + by
+        setMeta(key, nv.toString())
+        return nv
+    }
+}
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/java/com/example/smsgateway/model
+
+the file ApiModels.kt
+package com.example.smsgateway.model
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class SendRequest(
+    val to: String,
+    val body: String,
+    val simSlot: Int? = null,
+    val reference: String? = null
+)
+
+@Serializable
+data class SendResponse(
+    val id: String,
+    val status: String,          // "queued" | "sent" | "failed"
+    val reference: String? = null,
+    val error: String? = null
+)
+
+@Serializable
+data class StatusResponse(
+    val mode: String,
+    val uptimeSec: Long,
+    val simReady: Boolean,
+    val sentCount: Int,
+    val receivedCount: Int
+)
+
+@Serializable
+data class InboxMessage(
+    val id: Long,
+    val from: String,
+    val body: String,
+    val ts: Long
+)
+
+@Serializable
+data class InboxResponse(val messages: List<InboxMessage>)
+
+@Serializable
+data class WebhookRequest(
+    val url: String,
+    val secret: String? = null
+)
+
+@Serializable
+data class ErrorResponse(
+    val error: String,
+    val detail: String? = null
+)
+
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/java/com/example/smsgateway/service
+
+the file GatewayService.kt
+package com.example.smsgateway.service
+
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.IBinder
+import android.provider.Telephony
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import com.example.smsgateway.MainActivity
+import com.example.smsgateway.R
+import com.example.smsgateway.sms.SmsReceiver
+import com.example.smsgateway.ui.connection.ConnectionMode
+import com.example.smsgateway.ui.connection.ConnectionPrefs
+
+class GatewayService : Service() {
+
+    private val smsReceiver = SmsReceiver()
+
+    override fun onCreate() {
+        super.onCreate()
+        ContextCompat.registerReceiver(
+            this,
+            smsReceiver,
+            IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION),
+            ContextCompat.RECEIVER_EXPORTED
+        )
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startForeground(1, buildNotification(getString(R.string.service_starting)))
+
+        val cfg = ConnectionPrefs.load(this)
+        when (cfg.mode) {
+            ConnectionMode.WIFI -> {
+                WifiServer.configure(this, cfg.wifiToken) { updateNotification(it) }
+                WifiServer.start(cfg.wifiPort, cfg.wifiBindAll)
+                updateNotification(WifiServer.status())
+            }
+            ConnectionMode.USB -> {
+                UsbServer.configure(this) { updateNotification("USB: $it") }
+                UsbServer.start(
+                    mode = cfg.usbMode,
+                    usbPort = cfg.usbPort,
+                    wifiPort = cfg.wifiPort,
+                    wifiBindAll = false
+                )
+                updateNotification(UsbServer.status())
+            }
+            ConnectionMode.NONE -> updateNotification(getString(R.string.service_no_mode))
+        }
+        return START_STICKY
+    }
+
+    override fun onDestroy() {
+        try { WifiServer.stop() } catch (_: Throwable) {}
+        try { UsbServer.stop() } catch (_: Throwable) {}
+        try { unregisterReceiver(smsReceiver) } catch (_: Throwable) {}
+        super.onDestroy()
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    private fun buildNotification(text: String): Notification {
+        val chanId = "gateway"
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .createNotificationChannel(
+                NotificationChannel(
+                    chanId,
+                    getString(R.string.notif_channel_name),
+                    NotificationManager.IMPORTANCE_LOW
+                )
+            )
+
+        val tapIntent = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return NotificationCompat.Builder(this, chanId)
+            .setContentTitle(getString(R.string.app_name))
+            .setContentText(text)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(tapIntent)
+            .setOngoing(true)
+            .build()
+    }
+
+    private fun updateNotification(text: String) {
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .notify(1, buildNotification(text))
+    }
+}
+
+the file UsbServer.kt
+package com.example.smsgateway.service
+
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.hardware.usb.UsbAccessory
+import android.hardware.usb.UsbManager
+import android.os.Build
+import android.os.ParcelFileDescriptor
+import android.util.Log
+import androidx.core.content.ContextCompat
+import com.example.smsgateway.db.InboxDb
+import com.example.smsgateway.model.InboxMessage
+import com.example.smsgateway.sms.SmsSender
+import com.example.smsgateway.ui.connection.UsbMode
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+
+object UsbServer {
+
+    private const val TAG = "UsbServer"
+    private const val ACTION_USB_PERMISSION = "com.example.smsgateway.USB_PERMISSION"
+
+    private val json = Json { ignoreUnknownKeys = true }
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    @Volatile private var appContext: Context? = null
+    @Volatile private var db: InboxDb? = null
+    @Volatile private var statusListener: ((String) -> Unit)? = null
+    @Volatile private var lastStatus: String = "Disconnected"
+
+    @Volatile private var running = false
+    @Volatile private var currentMode: UsbMode? = null
+
+    @Volatile private var accessoryFd: ParcelFileDescriptor? = null
+    @Volatile private var ioJob: Job? = null
+    @Volatile private var permissionReceiver: BroadcastReceiver? = null
+
+    fun configure(context: Context, onStatus: (String) -> Unit) {
+        val ctx = context.applicationContext
+        appContext = ctx
+        db = InboxDb(ctx)
+        statusListener = onStatus
+        registerPermissionReceiver(ctx)
+    }
+
+    fun isRunning(): Boolean = running
+    fun status(): String = lastStatus
+
+    fun start(mode: UsbMode, usbPort: Int, wifiPort: Int, wifiBindAll: Boolean) {
+        if (running) {
+            Log.w(TAG, "start() ignored — already running")
+            return
+        }
+        val ctx = appContext ?: run {
+            setStatus("Error: not configured")
+            return
+        }
+
+        currentMode = mode
+        running = true
+
+        when (mode) {
+            UsbMode.ADB_FORWARD -> startAdbForward(ctx, usbPort, wifiPort)
+            UsbMode.ACCESSORY -> startAccessory(ctx)
+        }
+    }
+
+    fun stop() {
+        val wasRunning = running
+        running = false
+
+        ioJob?.cancel()
+        ioJob = null
+
+        try { accessoryFd?.close() } catch (_: Throwable) {}
+        accessoryFd = null
+
+        if (wasRunning && currentMode == UsbMode.ADB_FORWARD) {
+            try { WifiServer.stop() } catch (_: Throwable) {}
+        }
+
+        currentMode = null
+        setStatus("Disconnected")
+        Log.i(TAG, "USB stopped")
+    }
+
+    private fun startAdbForward(ctx: Context, usbPort: Int, wifiPort: Int) {
+        try {
+            WifiServer.configure(ctx, null) { s -> setStatus("ADB: $s") }
+            WifiServer.start(port = wifiPort, bindAll = false)
+            setStatus("Ready. On PC run: adb forward tcp:$usbPort tcp:$wifiPort")
+            Log.i(TAG, "ADB_FORWARD active on 127.0.0.1:$wifiPort (host port $usbPort)")
+        } catch (t: Throwable) {
+            Log.e(TAG, "ADB_FORWARD start failed", t)
+            setStatus("Error: ${t.message}")
+            running = false
+        }
+    }
+
+    private fun startAccessory(ctx: Context) {
+        val usbManager = ctx.getSystemService(Context.USB_SERVICE) as UsbManager
+        val accessory: UsbAccessory? = usbManager.accessoryList?.firstOrNull()
+
+        if (accessory == null) {
+            setStatus("No USB accessory attached")
+            running = false
+            return
+        }
+
+        if (!usbManager.hasPermission(accessory)) {
+            setStatus("Requesting USB permission…")
+            val flags = PendingIntent.FLAG_UPDATE_CURRENT or
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                        PendingIntent.FLAG_MUTABLE else 0
+            val pi = PendingIntent.getBroadcast(
+                ctx, 0,
+                Intent(ACTION_USB_PERMISSION).setPackage(ctx.packageName),
+                flags
+            )
+            usbManager.requestPermission(accessory, pi)
+            return
+        }
+
+        openAccessory(ctx, usbManager, accessory)
+    }
+
+    private fun openAccessory(
+        ctx: Context,
+        usbManager: UsbManager,
+        accessory: UsbAccessory
+    ) {
+        val fd = try {
+            usbManager.openAccessory(accessory)
+        } catch (t: Throwable) {
+            Log.e(TAG, "openAccessory failed", t)
+            null
+        }
+
+        if (fd == null) {
+            setStatus("Failed to open accessory")
+            running = false
+            return
+        }
+
+        accessoryFd = fd
+        setStatus("Accessory connected: ${accessory.model ?: accessory.manufacturer ?: "unknown"}")
+
+        ioJob = scope.launch { serveAccessory(fd) }
+    }
+
+    private suspend fun serveAccessory(fd: ParcelFileDescriptor) {
+        val fileIn = FileInputStream(fd.fileDescriptor)
+        val fileOut = FileOutputStream(fd.fileDescriptor)
+        val reader = BufferedReader(InputStreamReader(fileIn))
+        val writer = BufferedWriter(OutputStreamWriter(fileOut))
+
+        try {
+            while (running && currentCoroutineContext().isActive) {
+                val line = reader.readLine() ?: break
+                if (line.isBlank()) continue
+                val response = processCommand(line)
+                writer.write(response)
+                writer.write("\n")
+                writer.flush()
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "Accessory session ended: ${t.message}")
+        } finally {
+            try { writer.close() } catch (_: Throwable) {}
+            try { reader.close() } catch (_: Throwable) {}
+            try { fd.close() } catch (_: Throwable) {}
+            accessoryFd = null
+            if (running) {
+                setStatus("Accessory disconnected")
+                running = false
+            }
+        }
+    }
+
+    private fun registerPermissionReceiver(ctx: Context) {
+        if (permissionReceiver != null) return
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context, intent: Intent) {
+                if (intent.action != ACTION_USB_PERMISSION) return
+                val granted = intent.getBooleanExtra(
+                    UsbManager.EXTRA_PERMISSION_GRANTED, false
+                )
+                val accessory: UsbAccessory? =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                        intent.getParcelableExtra(
+                            UsbManager.EXTRA_ACCESSORY, UsbAccessory::class.java
+                        )
+                    else
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY)
+
+                if (!granted || accessory == null) {
+                    setStatus("USB permission denied")
+                    running = false
+                    return
+                }
+                val mgr = c.getSystemService(Context.USB_SERVICE) as UsbManager
+                openAccessory(c, mgr, accessory)
+            }
+        }
+
+        ContextCompat.registerReceiver(
+            ctx,
+            receiver,
+            IntentFilter(ACTION_USB_PERMISSION),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+        permissionReceiver = receiver
+    }
+
+    private fun processCommand(line: String): String {
+        val database = db ?: return """{"error":"db_unavailable"}"""
+        val ctx = appContext ?: return """{"error":"context_unavailable"}"""
+
+        return try {
+            val obj = json.parseToJsonElement(line) as JsonObject
+            val cmd = obj["cmd"]?.toString()?.trim('"') ?: ""
+
+            when (cmd) {
+                "status" -> buildJsonObject {
+                    put("mode", "USB")
+                    put("simReady", SmsSender.isSimReady(ctx))
+                    put("receivedCount", database.count())
+                    put("sentCount", database.getMeta("stat.sent")?.toIntOrNull() ?: 0)
+                }.toString()
+
+                "send" -> {
+                    val to = obj["to"]?.toString()?.trim('"') ?: ""
+                    val body = obj["body"]?.toString()?.trim('"') ?: ""
+                    val slot = obj["simSlot"]?.toString()?.toIntOrNull() ?: 0
+
+                    if (to.isBlank() || body.isBlank()) {
+                        buildJsonObject {
+                            put("ok", false)
+                            put("error", "'to' and 'body' are required")
+                        }.toString()
+                    } else {
+                        val res = SmsSender.send(ctx, to, body, slot)
+                        if (res.ok) database.incr("stat.sent")
+                        buildJsonObject {
+                            put("ok", res.ok)
+                            put("error", res.error ?: "")
+                        }.toString()
+                    }
+                }
+
+                "inbox" -> {
+                    val since = obj["since"]?.toString()?.toLongOrNull() ?: 0L
+                    val limit = obj["limit"]?.toString()?.toIntOrNull() ?: 200
+                    val list = database.since(since, limit)
+                    buildJsonObject {
+                        put("count", list.size)
+                        put(
+                            "messages",
+                            json.encodeToString(
+                                ListSerializer(InboxMessage.serializer()),
+                                list
+                            )
+                        )
+                    }.toString()
+                }
+                else -> """{"error":"unknown command"}"""
+            }
+        } catch (t: Throwable) {
+            Log.w(TAG, "processCommand failed: ${t.message}")
+            buildJsonObject {
+                put("error", t.message ?: "parse_error")
+            }.toString()
+        }
+    }
+
+    private fun setStatus(s: String) {
+        lastStatus = s
+        statusListener?.invoke(s)
+        Log.i(TAG, s)
+    }
+
+    fun shutdown() {
+        stop()
+        permissionReceiver?.let {
+            try { appContext?.unregisterReceiver(it) } catch (_: Throwable) {}
+        }
+        permissionReceiver = null
+        scope.cancel()
+    }
+}
+
+the file WebhookDispatcher.kt
+package com.example.smsgateway.service
+
+import android.content.Context
+import android.util.Log
+import com.example.smsgateway.db.InboxDb
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+
+object WebhookDispatcher {
+
+    private const val TAG = "Webhook"
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private val json = Json { encodeDefaults = true }
+
+    fun dispatch(context: Context, id: Long, from: String, body: String, ts: Long) {
+        val db = InboxDb(context.applicationContext)
+        val url = db.getMeta("webhook.url") ?: return
+        val secret = db.getMeta("webhook.secret")
+
+        val payload = buildJsonObject {
+            put("id", id); put("from", from); put("body", body); put("ts", ts)
+        }.toString()
+
+        scope.launch {
+            try {
+                val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+                    requestMethod = "POST"
+                    doOutput = true
+                    connectTimeout = 5000
+                    readTimeout = 5000
+                    setRequestProperty("Content-Type", "application/json; charset=utf-8")
+                    if (!secret.isNullOrBlank()) {
+                        setRequestProperty("X-Signature", hmacSha256(payload, secret))
+                    }
+                }
+                OutputStreamWriter(conn.outputStream, Charsets.UTF_8).use { it.write(payload) }
+                Log.i(TAG, "Webhook $url -> HTTP ${conn.responseCode}")
+                conn.disconnect()
+            } catch (t: Throwable) {
+                Log.w(TAG, "Webhook failed: ${t.message}")
+            }
+        }
+    }
+
+    private fun hmacSha256(data: String, key: String): String {
+        val mac = Mac.getInstance("HmacSHA256")
+        mac.init(SecretKeySpec(key.toByteArray(), "HmacSHA256"))
+        return mac.doFinal(data.toByteArray()).joinToString("") {
+            "%02x".format(it.toInt() and 0xFF)
+        }
+    }
+}
+
+the file WifiServer.kt
+package com.example.smsgateway.service
+
+import android.content.Context
+import android.util.Log
+import com.example.smsgateway.db.InboxDb
+import com.example.smsgateway.model.*
+import com.example.smsgateway.sms.SmsSender
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.cio.*
+import io.ktor.server.engine.*
+import io.ktor.server.plugins.calllogging.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import java.util.UUID
+
+object WifiServer {
+
+    private const val TAG = "WifiServer"
+
+    @Volatile private var server: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>? = null
+    @Volatile private var startedAt: Long = 0
+    @Volatile private var lastStatus: String = "Stopped"
+    @Volatile private var apiKey: String? = null
+    @Volatile private lateinit var db: InboxDb
+    @Volatile private lateinit var appContext: Context
+    @Volatile private var statusListener: ((String) -> Unit)? = null
+
+    fun configure(context: Context, token: String?, onStatus: (String) -> Unit) {
+        appContext = context.applicationContext
+        db = InboxDb(appContext)
+        apiKey = token?.takeIf { it.isNotBlank() }
+        statusListener = onStatus
+    }
+
+    fun isRunning(): Boolean = server != null
+    fun status(): String = lastStatus
+
+    fun start(port: Int, bindAll: Boolean) {
+        if (server != null) {
+            Log.w(TAG, "start() ignored — already running")
+            return
+        }
+        val host = if (bindAll) "0.0.0.0" else "127.0.0.1"
+        try {
+            val s = embeddedServer(
+                factory = CIO,
+                port = port,
+                host = host,
+                module = { module() }
+            ).start(wait = false)
+
+            server = s
+            startedAt = System.currentTimeMillis()
+            setStatus("Listening on $host:$port")
+            Log.i(TAG, "Ktor started on $host:$port")
+        } catch (t: Throwable) {
+            Log.e(TAG, "Failed to start Ktor", t)
+            setStatus("Error: ${t.message}")
+            server = null
+        }
+    }
+
+    fun stop() {
+        val s = server ?: return
+        server = null
+        startedAt = 0
+        runBlocking {
+            try { s.stop(500, 1000) } catch (t: Throwable) { Log.w(TAG, "Stop error", t) }
+        }
+        setStatus("Stopped")
+        Log.i(TAG, "Ktor stopped")
+    }
+
+    private fun setStatus(s: String) {
+        lastStatus = s
+        statusListener?.invoke(s)
+    }
+
+    private fun Application.module() {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                prettyPrint = false
+            })
+        }
+        install(CallLogging)
+        install(StatusPages) {
+            exception<Throwable> { call, cause ->
+                Log.e(TAG, "Unhandled error", cause)
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    ErrorResponse("internal_error", cause.message)
+                )
+            }
+        }
+
+        intercept(ApplicationCallPipeline.Plugins) {
+            val required = apiKey
+            if (!required.isNullOrBlank()) {
+                val header = call.request.headers["X-Api-Key"]
+                    ?: call.request.headers["Authorization"]
+                        ?.removePrefix("Bearer ")?.trim()
+                if (header != required) {
+                    call.respond(
+                        HttpStatusCode.Unauthorized,
+                        ErrorResponse("unauthorized", "Invalid or missing API key")
+                    )
+                    finish()
+                }
+            }
+        }
+
+        routing {
+            get("/status") {
+                call.respond(buildStatus())
+            }
+
+            post("/send") {
+                val req = call.receive<SendRequest>()
+                if (req.to.isBlank() || req.body.isBlank()) {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse("bad_request", "'to' and 'body' are required")
+                    )
+                    return@post
+                }
+                val ref = req.reference ?: UUID.randomUUID().toString()
+                val result = withContext(Dispatchers.IO) {
+                    SmsSender.send(
+                        context = appContext,
+                        phone = req.to,
+                        message = req.body,
+                        simSlot = req.simSlot ?: 0
+                    )
+                }
+                if (result.ok) db.incr("stat.sent")
+                call.respond(
+                    if (result.ok) HttpStatusCode.Accepted else HttpStatusCode.BadGateway,
+                    SendResponse(
+                        id = ref,
+                        status = if (result.ok) "queued" else "failed",
+                        reference = req.reference,
+                        error = result.error
+                    )
+                )
+            }
+
+            get("/inbox") {
+                val since = call.request.queryParameters["since"]?.toLongOrNull() ?: 0L
+                val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 200
+                val list = withContext(Dispatchers.IO) { db.since(since, limit) }
+                call.respond(InboxResponse(list))
+            }
+
+            post("/webhook") {
+                val req = call.receive<WebhookRequest>()
+                if (req.url.isBlank()) {
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse("bad_request", "'url' is required")
+                    )
+                    return@post
+                }
+                db.setMeta("webhook.url", req.url)
+                db.setMeta("webhook.secret", req.secret)
+                call.respond(HttpStatusCode.OK, mapOf("ok" to true))
+            }
+
+            delete("/webhook") {
+                db.setMeta("webhook.url", null)
+                db.setMeta("webhook.secret", null)
+                call.respond(HttpStatusCode.OK, mapOf("ok" to true))
+            }
+        }
+    }
+
+    private fun buildStatus(): StatusResponse {
+        val uptimeSec = if (startedAt == 0L) 0L
+        else (System.currentTimeMillis() - startedAt) / 1000
+        return StatusResponse(
+            mode = "WIFI",
+            uptimeSec = uptimeSec,
+            simReady = SmsSender.isSimReady(appContext),
+            sentCount = db.getMeta("stat.sent")?.toIntOrNull() ?: 0,
+            receivedCount = db.count()
+        )
+    }
+}
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/java/com/example/smsgateway/sms
+
+the file SmsReceiver.kt
+package com.example.smsgateway.sms
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.provider.Telephony
+import android.util.Log
+import com.example.smsgateway.db.InboxDb
+import com.example.smsgateway.service.WebhookDispatcher
+
+class SmsReceiver : BroadcastReceiver() {
+
+    companion object { private const val TAG = "SmsReceiver" }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action != Telephony.Sms.Intents.SMS_RECEIVED_ACTION) return
+
+        val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
+        val db = InboxDb(context.applicationContext)
+        val now = System.currentTimeMillis()
+
+        for (m in messages) {
+            val from = m.displayOriginatingAddress ?: "unknown"
+            val body = m.displayMessageBody ?: ""
+            val id = db.insert(from, body, now)
+            db.incr("stat.received")
+            Log.i(TAG, "Stored inbound #$id from $from")
+            WebhookDispatcher.dispatch(context, id, from, body, now)
+        }
+    }
+}
+
+the file SmsSender.kt
+package com.example.smsgateway.sms
+
+import android.Manifest
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.telephony.SmsManager
+import android.telephony.SubscriptionManager
+import android.telephony.TelephonyManager
+import android.util.Log
+import androidx.core.content.ContextCompat
+
+data class SendResult(val ok: Boolean, val error: String? = null)
+
+object SmsSender {
+
+    private const val TAG = "SmsSender"
+
+    fun send(
+        context: Context,
+        phone: String,
+        message: String,
+        simSlot: Int = 0
+    ): SendResult {
+        return try {
+            val sms = smsManagerForSlot(context, simSlot)
+                ?: defaultSmsManager(context)
+                ?: return SendResult(false, "SMS manager unavailable")
+
+            val parts = sms.divideMessage(message)
+
+            val sentIntents = ArrayList<PendingIntent>(parts.size)
+            parts.forEachIndexed { idx, _ ->
+                sentIntents += PendingIntent.getBroadcast(
+                    context,
+                    idx,
+                    Intent("com.example.smsgateway.SMS_SENT.$idx")
+                        .setPackage(context.packageName),
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            }
+
+            if (parts.size == 1) {
+                sms.sendTextMessage(phone, null, parts[0], sentIntents[0], null)
+            } else {
+                sms.sendMultipartTextMessage(phone, null, parts, sentIntents, null)
+            }
+            Log.i(TAG, "SMS queued to $phone (${parts.size} part(s))")
+            SendResult(ok = true)
+        } catch (t: Throwable) {
+            Log.e(TAG, "send() failed", t)
+            SendResult(ok = false, error = t.message ?: t.javaClass.simpleName)
+        }
+    }
+
+    /** Returns a per-SIM SmsManager on API 31+; falls back to the deprecated helper below 31. */
+    private fun smsManagerForSlot(context: Context, slot: Int): SmsManager? {
+        return try {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.READ_PHONE_STATE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.w(TAG, "READ_PHONE_STATE not granted; cannot select SIM")
+                return null
+            }
+
+            val subMgr = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)
+                    as? SubscriptionManager
+                ?: return null
+
+            val sub = subMgr.activeSubscriptionInfoList
+                ?.firstOrNull { it.simSlotIndex == slot }
+                ?: subMgr.activeSubscriptionInfoList?.firstOrNull()
+                ?: return null
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                context.getSystemService(SmsManager::class.java)
+                    ?.createForSubscriptionId(sub.subscriptionId)
+            } else {
+                @Suppress("DEPRECATION")
+                SmsManager.getSmsManagerForSubscriptionId(sub.subscriptionId)
+            }
+        } catch (t: Throwable) {
+            Log.e(TAG, "smsManagerForSlot() failed", t)
+            null
+        }
+    }
+
+    /** Default SmsManager; uses the API 31+ system service when available. */
+    private fun defaultSmsManager(context: Context): SmsManager? {
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                context.getSystemService(SmsManager::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                SmsManager.getDefault()
+            }
+        } catch (t: Throwable) {
+            Log.e(TAG, "defaultSmsManager() failed", t)
+            null
+        }
+    }
+
+    fun isSimReady(context: Context): Boolean {
+        return try {
+            context.getSystemService(TelephonyManager::class.java)
+                ?.simState == TelephonyManager.SIM_STATE_READY
+        } catch (_: Throwable) {
+            false
+        }
+    }
+}
+
+the folder /home/mohammed/Projects/SmsGateway/app/src/main/java/com/example/smsgateway/ui/connection
+
+the file ConnectionActivity.kt
+package com.example.smsgateway.ui.connection
+
+import android.os.Bundle
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Button
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
+import com.example.smsgateway.R
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import kotlinx.coroutines.launch
+
+class ConnectionActivity : AppCompatActivity() {
+
+    private val vm: ConnectionViewModel by viewModels()
+
+    private val labels = listOf("USB", "Wi-Fi")
+    private val modes = listOf(ConnectionMode.USB, ConnectionMode.WIFI)
+
+    private var currentMode: ConnectionMode? = null
+    private lateinit var act: MaterialAutoCompleteTextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_connection)
+
+        val root = findViewById<View>(R.id.root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+
+        act = findViewById(R.id.actConnectionType)
+
+        act.setAdapter(
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, labels)
+        )
+
+        val saved = vm.config.value.mode
+        val initialIndex = modes.indexOf(saved).takeIf { it >= 0 } ?: 0
+        act.setText(labels[initialIndex], false)
+        showFragment(modes[initialIndex])
+
+        act.setOnItemClickListener { _, _, position, _ ->
+            showFragment(modes[position])
+        }
+
+        findViewById<Button>(R.id.btnSave).setOnClickListener { finish() }
+        findViewById<Button>(R.id.btnCancel).setOnClickListener { finish() }
+
+        lifecycleScope.launch {
+            vm.config.collect { cfg ->
+                val idx = modes.indexOf(cfg.mode)
+                if (idx >= 0 && labels[idx] != act.text.toString()) {
+                    act.setText(labels[idx], false)
+                    showFragment(cfg.mode)
+                }
+            }
+        }
+    }
+
+    private fun showFragment(mode: ConnectionMode) {
+        if (mode == currentMode) return
+        currentMode = mode
+
+        vm.update { it.copy(mode = mode) }
+
+        val fragment: Fragment = when (mode) {
+            ConnectionMode.USB -> UsbConnectionFragment()
+            ConnectionMode.WIFI -> WifiConnectionFragment()
+            ConnectionMode.NONE -> UsbConnectionFragment()
+        }
+
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.fragmentContainer, fragment)
+        }
+    }
+}
+
+the file ConnectionPrefs.kt
+package com.example.smsgateway.ui.connection
+
+import android.content.Context
+import androidx.core.content.edit
+
+enum class ConnectionMode { NONE, USB, WIFI }
+enum class UsbMode { ADB_FORWARD, ACCESSORY }
+
+data class ConnectionConfig(
+    val mode: ConnectionMode = ConnectionMode.NONE,
+    val wifiPort: Int = 8080,
+    val wifiBindAll: Boolean = true,
+    val wifiToken: String? = null,
+    val usbMode: UsbMode = UsbMode.ADB_FORWARD,
+    val usbPort: Int = 8081
+)
+
+object ConnectionPrefs {
+    private const val PREFS = "connection_prefs"
+
+    private fun prefs(ctx: Context) =
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+
+    fun load(ctx: Context): ConnectionConfig {
+        val p = prefs(ctx)
+        val rawMode = p.getString("mode", ConnectionMode.NONE.name)!!
+        // Guard against an old "BLUETOOTH" value from a previous install.
+        val mode = runCatching { ConnectionMode.valueOf(rawMode) }
+            .getOrDefault(ConnectionMode.NONE)
+
+        return ConnectionConfig(
+            mode = mode,
+            wifiPort = p.getInt("wifi_port", 8080),
+            wifiBindAll = p.getBoolean("wifi_bind_all", true),
+            wifiToken = p.getString("wifi_token", null),
+            usbMode = UsbMode.valueOf(
+                p.getString("usb_mode", UsbMode.ADB_FORWARD.name)!!
+            ),
+            usbPort = p.getInt("usb_port", 8081)
+        )
+    }
+
+    fun save(ctx: Context, cfg: ConnectionConfig) {
+        prefs(ctx).edit {
+            putString("mode", cfg.mode.name)
+            putInt("wifi_port", cfg.wifiPort)
+            putBoolean("wifi_bind_all", cfg.wifiBindAll)
+            putString("wifi_token", cfg.wifiToken)
+            putString("usb_mode", cfg.usbMode.name)
+            putInt("usb_port", cfg.usbPort)
+        }
+    }
+}
+
+the file ConnectionViewModel.kt
+package com.example.smsgateway.ui.connection
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+class ConnectionViewModel(app: Application) : AndroidViewModel(app) {
+
+    private val _config = MutableStateFlow(ConnectionPrefs.load(app))
+    val config: StateFlow<ConnectionConfig> = _config.asStateFlow()
+
+    private val _wifiStatus = MutableStateFlow("Stopped")
+    val wifiStatus: StateFlow<String> = _wifiStatus.asStateFlow()
+
+    private val _usbStatus = MutableStateFlow("Disconnected")
+    val usbStatus: StateFlow<String> = _usbStatus.asStateFlow()
+
+    fun update(transform: (ConnectionConfig) -> ConnectionConfig) {
+        val newCfg = transform(_config.value)
+        _config.value = newCfg
+        ConnectionPrefs.save(getApplication(), newCfg)
+    }
+
+    fun setWifiStatus(s: String) { _wifiStatus.value = s }
+    fun setUsbStatus(s: String) { _usbStatus.value = s }
+}
+
+the file UsbConnectionFragment.kt
+package com.example.smsgateway.ui.connection
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.smsgateway.R
+import kotlinx.coroutines.launch
+import java.util.Locale
+
+class UsbConnectionFragment : Fragment() {
+
+    private val vm: ConnectionViewModel by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, s: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_usb, container, false)
+
+    override fun onViewCreated(v: View, s: Bundle?) {
+        val rg = v.findViewById<RadioGroup>(R.id.rgUsbMode)
+        val etPort = v.findViewById<EditText>(R.id.etUsbPort)
+        val tvStatus = v.findViewById<TextView>(R.id.tvUsbStatus)
+
+        val cfg = vm.config.value
+        etPort.setText(String.format(Locale.US, "%d", cfg.usbPort))
+        when (cfg.usbMode) {
+            UsbMode.ADB_FORWARD -> rg.check(R.id.rbAdb)
+            UsbMode.ACCESSORY -> rg.check(R.id.rbAccessory)
+        }
+
+        rg.setOnCheckedChangeListener { _, id ->
+            vm.update {
+                it.copy(
+                    mode = ConnectionMode.USB,
+                    usbMode = if (id == R.id.rbAdb) UsbMode.ADB_FORWARD
+                    else UsbMode.ACCESSORY
+                )
+            }
+        }
+        etPort.setOnFocusChangeListener { _, _ ->
+            etPort.text.toString().toIntOrNull()?.let { p ->
+                vm.update { it.copy(usbPort = p) }
+            }
+        }
+
+        v.findViewById<Button>(R.id.btnUsbTest).setOnClickListener {
+            tvStatus.text = getString(R.string.status_format, vm.usbStatus.value)
+            Toast.makeText(
+                requireContext(),
+                R.string.usb_test_triggered,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.usbStatus.collect {
+                tvStatus.text = getString(R.string.status_format, it)
+            }
+        }
+    }
+}
+
+the file WifiConnectionFragment.kt
+package com.example.smsgateway.ui.connection
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.smsgateway.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.Inet4Address
+import java.net.NetworkInterface
+import java.util.Locale
+
+class WifiConnectionFragment : Fragment() {
+
+    private val vm: ConnectionViewModel by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, s: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_wifi, container, false)
+
+    override fun onViewCreated(v: View, s: Bundle?) {
+        val cfg = vm.config.value
+        val etPort = v.findViewById<EditText>(R.id.etWifiPort)
+        val etToken = v.findViewById<EditText>(R.id.etWifiToken)
+        val cbAll = v.findViewById<CheckBox>(R.id.cbBindAll)
+        val tvStatus = v.findViewById<TextView>(R.id.tvWifiStatus)
+        val tvIps = v.findViewById<TextView>(R.id.tvIpList)
+
+        etPort.setText(String.format(Locale.US, "%d", cfg.wifiPort))
+        etToken.setText(cfg.wifiToken ?: "")
+        cbAll.isChecked = cfg.wifiBindAll
+
+        etPort.setOnFocusChangeListener { _, _ ->
+            etPort.text.toString().toIntOrNull()?.let { p ->
+                vm.update { it.copy(wifiPort = p) }
+            }
+        }
+        etToken.setOnFocusChangeListener { _, _ ->
+            vm.update {
+                it.copy(
+                    wifiToken = etToken.text.toString()
+                        .takeIf { t -> t.isNotBlank() }
+                )
+            }
+        }
+        cbAll.setOnCheckedChangeListener { _, c ->
+            vm.update { it.copy(wifiBindAll = c) }
+        }
+
+        fun refreshIps() {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val ips = withContext(Dispatchers.IO) { localIpv4Addresses() }
+                val body = if (ips.isEmpty()) getString(R.string.local_ips_none)
+                else ips.joinToString("\n")
+                tvIps.text = getString(R.string.local_ips_block, body)
+            }
+        }
+        refreshIps()
+        v.findViewById<Button>(R.id.btnWifiRefreshIp)
+            .setOnClickListener { refreshIps() }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.wifiStatus.collect {
+                tvStatus.text = getString(R.string.status_format, it)
+            }
+        }
+    }
+
+    private fun localIpv4Addresses(): List<String> = try {
+        NetworkInterface.getNetworkInterfaces().toList()
+            .filter { it.isUp && !it.isLoopback }
+            .flatMap { it.inetAddresses.toList() }
+            .filterIsInstance<Inet4Address>()
+            .mapNotNull { it.hostAddress }
+    } catch (_: Exception) { emptyList() }
+}
+
+
+
+
+
