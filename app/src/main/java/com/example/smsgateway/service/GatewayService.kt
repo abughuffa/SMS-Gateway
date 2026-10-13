@@ -118,11 +118,11 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
             ConnectionMode.USB -> {
                 GatewayServer.configure(
                     context = this@GatewayService,
-                    onStatus = { updateNotification("USB: $it") }
+                    onStatus = { updateNotification(it) }
                 )
 
                 GatewayServer.start(
-                    mode = GatewayServer.ConnectionMode.WIFI,
+                    mode = GatewayServer.ConnectionMode.USB,
                     port = cfg.usbPort,
                     apiToken = null,
                     bindAll = false

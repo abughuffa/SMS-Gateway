@@ -47,9 +47,6 @@ object GatewayServer {
 
     private const val TAG = "GatewayServer"
     private const val ACTION_USB_PERMISSION = "com.example.smsgateway.USB_PERMISSION"
-    //private val json = Json { ignoreUnknownKeys = true }
-
-    // Use a supervisor job to allow independent failure of sub-tasks
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     @Volatile private var appContext: Context? = null
     @Volatile private var db: InboxDb? = null
@@ -298,22 +295,21 @@ object GatewayServer {
             override fun onReceive(c: Context, intent: Intent) {
                 if (intent.action != ACTION_USB_PERMISSION) return
 
-                val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-                val accessory: UsbAccessory? =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                        intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY, UsbAccessory::class.java)
-                    else
-                        @Suppress("DEPRECATION")
-                        intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY)
+//                val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
+//                val accessory: UsbAccessory? =
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+//                        intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY, UsbAccessory::class.java)
+//                    else
+//                        @Suppress("DEPRECATION")
+//                        intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY)
+//
+//                if (!granted || accessory == null) {
+//                    setStatus("USB permission denied")
+//                    running = false
+//                    return
+//                }
 
-                if (!granted || accessory == null) {
-                    setStatus("USB permission denied")
-                    running = false
-                    return
-                }
 
-                //val mgr = c.getSystemService(Context.USB_SERVICE) as UsbManager
-                //openAccessory(c, mgr, accessory)
             }
         }
 

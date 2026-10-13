@@ -28,12 +28,24 @@ data class StatusResponse(
 )
 
 @Serializable
+//data class InboxMessage(
+//    val id: Long,
+//    val from: String,
+//    val body: String,
+//    val ts: Long
+//)
+
 data class InboxMessage(
     val id: Long,
     val from: String,
     val body: String,
-    val ts: Long
+    val ts: Long,
+    val simSlot:    Int? = null,
+    val concatRef:  Int? = null,
+    val partNumber: Int? = null,
+    val totalParts: Int? = null
 )
+
 
 @Serializable
 data class InboxResponse(val messages: List<InboxMessage>)

@@ -1,6 +1,68 @@
+//package com.example.smsgateway.service
+//
+//import android.content.Context
+//import com.example.smsgateway.db.InboxDb
+//import com.example.smsgateway.log.Log
+//import kotlinx.coroutines.CoroutineScope
+//import kotlinx.coroutines.Dispatchers
+//import kotlinx.coroutines.SupervisorJob
+//import kotlinx.coroutines.launch
+//import kotlinx.serialization.json.Json
+//import kotlinx.serialization.json.buildJsonObject
+//import kotlinx.serialization.json.put
+//import java.io.OutputStreamWriter
+//import java.net.HttpURLConnection
+//import java.net.URL
+//import javax.crypto.Mac
+//import javax.crypto.spec.SecretKeySpec
+//
+//object WebhookDispatcher {
+//
+//    private const val TAG = "Webhook"
+//
+//    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+//
+//    fun dispatch(context: Context, id: Long, from: String, body: String, ts: Long) {
+//        val db = InboxDb.get(context.applicationContext)
+//        val url = db.getMeta("webhook.url") ?: return
+//        val secret = db.getMeta("webhook.secret")
+//
+//        val payload = buildJsonObject {
+//            put("id", id); put("from", from); put("body", body); put("ts", ts)
+//        }.toString()
+//
+//        scope.launch {
+//            try {
+//                val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+//                    requestMethod = "POST"
+//                    doOutput = true
+//                    connectTimeout = 5000
+//                    readTimeout = 5000
+//                    setRequestProperty("Content-Type", "application/json; charset=utf-8")
+//                    if (!secret.isNullOrBlank()) {
+//                        setRequestProperty("X-Signature", hmacSha256(payload, secret))
+//                    }
+//                }
+//                OutputStreamWriter(conn.outputStream, Charsets.UTF_8).use { it.write(payload) }
+//                Log.i(TAG, "Webhook $url -> HTTP ${conn.responseCode}")
+//                conn.disconnect()
+//            } catch (t: Throwable) {
+//                Log.w(TAG, "Webhook failed: ${t.message}")
+//            }
+//        }
+//    }
+//
+//    private fun hmacSha256(data: String, key: String): String {
+//        val mac = Mac.getInstance("HmacSHA256")
+//        mac.init(SecretKeySpec(key.toByteArray(), "HmacSHA256"))
+//        return mac.doFinal(data.toByteArray()).joinToString("") {
+//            "%02x".format(it.toInt() and 0xFF)
+//        }
+//    }
+//}
+
 package com.example.smsgateway.service
 
-//import android.util.Log
 import android.content.Context
 import com.example.smsgateway.db.InboxDb
 import com.example.smsgateway.log.Log
@@ -8,7 +70,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import java.io.OutputStreamWriter
@@ -22,15 +83,31 @@ object WebhookDispatcher {
     private const val TAG = "Webhook"
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-//    private val json = Json { encodeDefaults = true }
 
-    fun dispatch(context: Context, id: Long, from: String, body: String, ts: Long) {
+    fun dispatch(
+        context: Context,
+        id: Long,
+        from: String,
+        body: String,
+        ts: Long,
+        simSlot:    Int? = null,
+        concatRef:  Int? = null,
+        partNumber: Int? = null,
+        totalParts: Int? = null,
+    ) {
         val db = InboxDb.get(context.applicationContext)
         val url = db.getMeta("webhook.url") ?: return
         val secret = db.getMeta("webhook.secret")
 
         val payload = buildJsonObject {
-            put("id", id); put("from", from); put("body", body); put("ts", ts)
+            put("id",   id)
+            put("from", from)
+            put("body", body)
+            put("ts",   ts)
+            if (simSlot != null && simSlot >= 0) put("simSlot",    simSlot)
+            if (concatRef  != null) put("refNumber",  concatRef)
+            if (partNumber != null) put("partNumber", partNumber)
+            if (totalParts != null) put("totalParts", totalParts)
         }.toString()
 
         scope.launch {
@@ -56,8 +133,8 @@ object WebhookDispatcher {
 
     private fun hmacSha256(data: String, key: String): String {
         val mac = Mac.getInstance("HmacSHA256")
-        mac.init(SecretKeySpec(key.toByteArray(), "HmacSHA256"))
-        return mac.doFinal(data.toByteArray()).joinToString("") {
+        mac.init(SecretKeySpec(key.toByteArray(Charsets.UTF_8), "HmacSHA256"))
+        return mac.doFinal(data.toByteArray(Charsets.UTF_8)).joinToString("") {
             "%02x".format(it.toInt() and 0xFF)
         }
     }
