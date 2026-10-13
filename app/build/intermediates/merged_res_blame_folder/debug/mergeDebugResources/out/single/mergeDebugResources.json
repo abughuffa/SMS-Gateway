@@ -1,82 +1,114 @@
 [
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/layout_item_log_entry.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/layout/item_log_entry.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-mdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/layout_activity_connection.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/layout/activity_connection.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-xhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/layout_fragment_usb.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/layout/fragment_usb.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_fragment_wifi.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/fragment_wifi.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-hdpi/ic_launcher.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-xxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-anydpi_ic_launcher_round.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-anydpi/ic_launcher_round.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_activity_help.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/activity_help.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-xxxhdpi/ic_launcher.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/drawable_ic_stat_gateway.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/drawable/ic_stat_gateway.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-xxhdpi/ic_launcher.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-mdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/layout_activity_main.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/layout/activity_main.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-anydpi_ic_launcher_round.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-anydpi/ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/drawable/ic_launcher_foreground.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/drawable_ic_help.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/drawable/ic_help.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-xhdpi/ic_launcher_round.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/drawable_ic_settings.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/drawable/ic_settings.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-anydpi_ic_launcher.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-anydpi/ic_launcher.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/layout_fragment_wifi.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/layout/fragment_wifi.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_fragment_usb.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/fragment_usb.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-xxxhdpi/ic_launcher_round.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_activity_connection.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/activity_connection.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-mdpi/ic_launcher_round.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-hdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/layout_activity_log_viewer.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/layout/activity_log_viewer.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/menu_menu_main.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/menu/menu_main.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_item_help_section.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/item_help_section.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/drawable_ic_stat_gateway.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/drawable/ic_stat_gateway.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/drawable_ic_arrow_back.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/drawable/ic_arrow_back.xml"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-anydpi_ic_launcher.xml.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-anydpi/ic_launcher.xml"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.smsgateway.app-debug-37:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "com.example.smsgateway.app-main-39:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.smsgateway.app-debug-37:/menu_menu_main.xml.flat",
+        "source": "com.example.smsgateway.app-main-39:/menu/menu_main.xml"
+    },
+    {
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_activity_main.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_activity_settings.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_item_log_entry.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/item_log_entry.xml"
+    },
+    {
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-debug-37:/layout_fragment_log.xml.flat",
+        "source": "/home/mohammed/.gradle/daemon/9.8.0/com.example.smsgateway.app-main-39:/layout/fragment_log.xml"
     }
 ]

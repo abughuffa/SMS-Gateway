@@ -41,6 +41,8 @@ android {
         dataBinding = false
     }
 
+
+
     lint {
         disable += setOf(
             "GradleDependency",

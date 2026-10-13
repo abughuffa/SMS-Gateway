@@ -6,19 +6,20 @@
     <color name="level_inactive_bg">#00000000</color>
     <color name="level_inactive_stroke">#6200EE</color>
     <color name="level_inactive_text">#6200EE</color>
-    <string name="action_connection_settings">Connection Settings</string>
-    <string name="action_process_log">View Log</string>
-    <string name="action_start">Start</string>
-    <string name="action_stop">Stop</string>
+    <string name="activity_log">Activity Log</string>
     <string name="api_example">API example:\nPOST http://&lt;phone-ip>:8080/send\n{"to":"+123","body":"hi"}</string>
     <string name="app_name">SMS Gateway</string>
+    <string name="auto_scroll">Auto-scroll</string>
     <string name="btn_refresh_ips">Refresh IP Addresses</string>
     <string name="btn_usb_test">Test USB</string>
     <string name="cancel">Cancel</string>
-    <string name="connection_settings">Connection Settings</string>
+    <string name="clear">Clear</string>
     <string name="connection_type">Connection type</string>
     <string name="d">D</string>
+    <string name="disconnected">Disconnected</string>
     <string name="e">E</string>
+    <string name="help">Help</string>
+    <string name="hide_log">Hide Log</string>
     <string name="hint_api_key">API key (X-Api-Key header, optional)</string>
     <string name="hint_http_port">HTTP port (default 8080)</string>
     <string name="hint_usb_port">USB port</string>
@@ -27,25 +28,25 @@
     <string name="label_ip_list">Local IPs:</string>
     <string name="local_ips_block">Local IPs:\n%1$s</string>
     <string name="local_ips_none">(none)</string>
-    <string name="log_autoscroll">Auto-scroll</string>
-    <string name="log_clear">Clear</string>
     <string name="log_filter_hint">Filter (tag or text)</string>
-    <string name="log_share">Share</string>
-    <string name="log_viewer_title">Activity Log</string>
-    <string name="main_title">SMS Gateway</string>
-    <string name="notif_channel_name">SMS Gateway</string>
     <string name="rb_adb">ADB forward</string>
+    <string name="running">Running</string>
     <string name="save_and_apply">Save &amp; Apply</string>
     <string name="saved">Saved!</string>
-    <string name="service_label">Service:</string>
+    <string name="service">Service:</string>
     <string name="service_no_mode">No mode selected</string>
-    <string name="status_disconnected">Disconnected</string>
-    <string name="status_format">Status: %1$s</string>
-    <string name="status_running">Running</string>
-    <string name="status_stopped">Stopped</string>
+    <string name="settings">Settings</string>
+    <string name="share">Share</string>
+    <string name="start">Start</string>
+    <string name="status_formated">Status: %1$s</string>
+    <string name="stop">Stop</string>
+    <string name="stopped">Stopped</string>
     <string name="usb_test_triggered">USB test triggered</string>
+    <string name="view_log">View Log</string>
     <string name="w">W</string>
-    <style name="Theme.Material3.DayNight" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.SmsGateway" parent="Theme.Material3.DayNight.NoActionBar">
         
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

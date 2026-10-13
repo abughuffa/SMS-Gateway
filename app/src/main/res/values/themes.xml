@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Material3.DayNight" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- defaults -->
+    <style name="Theme.SmsGateway" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Status bar / navigation bar colors, etc., if you have any -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
+<!--    <style name="Theme.Material3.DayNight" parent="Theme.Material3.DayNight.NoActionBar">-->
+<!--        &lt;!&ndash; defaults &ndash;&gt;-->
+<!--    </style>-->
 </resources>
+

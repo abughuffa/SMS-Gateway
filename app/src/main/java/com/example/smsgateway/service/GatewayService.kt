@@ -13,10 +13,9 @@ import androidx.core.app.NotificationCompat
 import com.example.smsgateway.MainActivity
 import com.example.smsgateway.R
 import com.example.smsgateway.log.LogBuffer
-import com.example.smsgateway.ui.connection.ConnectionConfig
-import com.example.smsgateway.ui.connection.ConnectionMode
-import com.example.smsgateway.ui.connection.ConnectionPrefs
-//import com.example.smsgateway.ui.connection.UsbMode
+import com.example.smsgateway.ui.settings.ConnectionConfig
+import com.example.smsgateway.ui.settings.ConnectionMode
+import com.example.smsgateway.ui.settings.SettingsPrefs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -43,18 +42,18 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
         val prefs = getSharedPreferences("connection_prefs", Context.MODE_PRIVATE)
         prefs.registerOnSharedPreferenceChangeListener(this)
 
-        lastConfig = ConnectionPrefs.load(this)
+        lastConfig = SettingsPrefs.load(this)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val cfg = ConnectionPrefs.load(this)
+        val cfg = SettingsPrefs.load(this)
         lastConfig = cfg
 
         LogBuffer.i("Gateway", "onStartCommand, mode=${cfg.mode}")
 
         startForeground(
             NOTIF_ID,
-            buildNotification(getString(R.string.status_running))
+            buildNotification(getString(R.string.running))
         )
 
         restartJob?.cancel()
@@ -68,7 +67,7 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
     override fun onSharedPreferenceChanged(prefs: SharedPreferences?, key: String?) {
         if (prefs == null) return
 
-        val newConfig = ConnectionPrefs.load(this)
+        val newConfig = SettingsPrefs.load(this)
 
         // Only restart if config actually changed
         if (newConfig == lastConfig) {
@@ -165,7 +164,7 @@ class GatewayService : Service(), SharedPreferences.OnSharedPreferenceChangeList
         mgr.createNotificationChannel(
             NotificationChannel(
                 CHANNEL_ID,
-                getString(R.string.notif_channel_name),
+                getString(R.string.app_name),
                 NotificationManager.IMPORTANCE_LOW
             )
         )

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.example.smsgateway.R;
+import com.google.android.material.appbar.MaterialToolbar;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
@@ -21,16 +23,19 @@ public final class ActivityMainBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final Button btnConnection;
-
-  @NonNull
-  public final Button btnProcessLog;
-
-  @NonNull
   public final Button btnToggleService;
 
   @NonNull
+  public final Button btnViewLog;
+
+  @NonNull
+  public final FrameLayout fragmentContainer;
+
+  @NonNull
   public final LinearLayout root;
+
+  @NonNull
+  public final MaterialToolbar toolbar;
 
   @NonNull
   public final TextView tvServiceLabel;
@@ -38,14 +43,16 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final TextView tvServiceStatus;
 
-  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button btnConnection,
-      @NonNull Button btnProcessLog, @NonNull Button btnToggleService, @NonNull LinearLayout root,
+  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull Button btnToggleService,
+      @NonNull Button btnViewLog, @NonNull FrameLayout fragmentContainer,
+      @NonNull LinearLayout root, @NonNull MaterialToolbar toolbar,
       @NonNull TextView tvServiceLabel, @NonNull TextView tvServiceStatus) {
     this.rootView = rootView;
-    this.btnConnection = btnConnection;
-    this.btnProcessLog = btnProcessLog;
     this.btnToggleService = btnToggleService;
+    this.btnViewLog = btnViewLog;
+    this.fragmentContainer = fragmentContainer;
     this.root = root;
+    this.toolbar = toolbar;
     this.tvServiceLabel = tvServiceLabel;
     this.tvServiceStatus = tvServiceStatus;
   }
@@ -77,25 +84,31 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.btnConnection;
-      Button btnConnection = ViewBindings.findChildViewById(rootView, id);
-      if (btnConnection == null) {
-        break missingId;
-      }
-
-      id = R.id.btnProcessLog;
-      Button btnProcessLog = ViewBindings.findChildViewById(rootView, id);
-      if (btnProcessLog == null) {
-        break missingId;
-      }
-
       id = R.id.btnToggleService;
       Button btnToggleService = ViewBindings.findChildViewById(rootView, id);
       if (btnToggleService == null) {
         break missingId;
       }
 
+      id = R.id.btnViewLog;
+      Button btnViewLog = ViewBindings.findChildViewById(rootView, id);
+      if (btnViewLog == null) {
+        break missingId;
+      }
+
+      id = R.id.fragmentContainer;
+      FrameLayout fragmentContainer = ViewBindings.findChildViewById(rootView, id);
+      if (fragmentContainer == null) {
+        break missingId;
+      }
+
       LinearLayout root = (LinearLayout) rootView;
+
+      id = R.id.toolbar;
+      MaterialToolbar toolbar = ViewBindings.findChildViewById(rootView, id);
+      if (toolbar == null) {
+        break missingId;
+      }
 
       id = R.id.tvServiceLabel;
       TextView tvServiceLabel = ViewBindings.findChildViewById(rootView, id);
@@ -109,8 +122,8 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, btnConnection, btnProcessLog,
-          btnToggleService, root, tvServiceLabel, tvServiceStatus);
+      return new ActivityMainBinding((LinearLayout) rootView, btnToggleService, btnViewLog,
+          fragmentContainer, root, toolbar, tvServiceLabel, tvServiceStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
