@@ -6,12 +6,6 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/activity_log"
-        android:textSize="24sp"
-        android:textStyle="bold" />
 
     <!-- Filter row -->
     <LinearLayout
